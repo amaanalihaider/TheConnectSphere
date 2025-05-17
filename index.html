@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The ConnectSphere - Find Your Perfect Match</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <!-- Header -->
+    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-purple-600">
+                <span class="text-pink-500">The</span> ConnectSphere
+            </a>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#profiles" class="nav-link">Profiles</a>
+                <a href="#blog" class="nav-link">Blog</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="#" id="signup-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300">Sign Up</a>
+            </nav>
+            <!-- Mobile Navigation Toggle -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex flex-col space-y-3">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="#" id="mobile-signup-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50 pt-20">
+        <div class="container mx-auto px-4 py-16">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
+                        Find Your Perfect Match with The ConnectSphere
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-8">
+                        Where meaningful connections happen. Join thousands who have found their life partners through our platform.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#" class="btn-primary" id="join-now-btn">
+                            Join Now
+                        </a>
+                        <a href="#about" class="btn-secondary">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2" data-aos="fade-left" data-aos-duration="1000">
+                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" 
+                         alt="Happy Couple" class="rounded-lg shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">About The ConnectSphere</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Our story and mission</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" 
+                         alt="Our Team" class="rounded-lg shadow-xl">
+                </div>
+                <div class="md:w-1/2 md:pl-10" data-aos="fade-left" data-aos-duration="1000">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-600">Our Vision</h3>
+                    <p class="mb-6 text-gray-600">
+                        Founded in 2020, The ConnectSphere was born from a simple idea: to create a platform that combines 
+                        traditional matchmaking values with modern technology. We believe that finding a life partner 
+                        should be a meaningful journey, not just a series of swipes.
+                    </p>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-600">Our Mission</h3>
+                    <p class="mb-6 text-gray-600">
+                        We're committed to helping individuals find compatible partners based on shared values, 
+                        interests, and life goals. Our approach balances respect for cultural traditions with 
+                        the freedom of personal choice.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+                                <i class="fas fa-heart text-xl"></i>
+                            </div>
+                            <span class="font-medium">10,000+ Matches</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 mr-3">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <span class="font-medium">50,000+ Members</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+                                <i class="fas fa-globe text-xl"></i>
+                            </div>
+                            <span class="font-medium">Global Community</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Our Features</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">What makes The ConnectSphere special</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-6 mx-auto">
+                        <i class="fas fa-user-shield text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-4">Verified Profiles</h3>
+                    <p class="text-gray-600 text-center">
+                        Every profile undergoes a thorough verification process to ensure authenticity and build trust within our community.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 mb-6 mx-auto">
+                        <i class="fas fa-filter text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-4">Smart Matching</h3>
+                    <p class="text-gray-600 text-center">
+                        Our advanced algorithm considers your preferences, values, and compatibility factors to suggest the most suitable matches.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-6 mx-auto">
+                        <i class="fas fa-comments text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-4">Secure Messaging</h3>
+                    <p class="text-gray-600 text-center">
+                        Connect with potential matches through our encrypted messaging system that protects your privacy and personal information.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="400">
+                    <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 mb-6 mx-auto">
+                        <i class="fas fa-user-friends text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-4">Family Involvement</h3>
+                    <p class="text-gray-600 text-center">
+                        Optional family profiles allow parents and guardians to participate in the matchmaking process while respecting individual choices.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="500">
+                    <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-6 mx-auto">
+                        <i class="fas fa-calendar-check text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-4">Virtual Meetings</h3>
+                    <p class="text-gray-600 text-center">
+                        Arrange secure video calls within our platform before deciding to meet in person, making distance no barrier to finding love.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="600">
+                    <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 mb-6 mx-auto">
+                        <i class="fas fa-hand-holding-heart text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-4">Relationship Guidance</h3>
+                    <p class="text-gray-600 text-center">
+                        Access to relationship experts, articles, and resources to help you navigate your journey to finding a life partner.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profiles Section -->
+    <section id="profiles" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Featured Profiles</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Meet some of our amazing members</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Profile 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
+                         alt="Profile 1" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Sarah, 28</h3>
+                        <p class="text-gray-600 mb-4">Doctor | New York</p>
+                        <p class="text-gray-600 mb-4">
+                            Passionate about healthcare and traveling. Looking for someone who shares my love for adventure and meaningful conversations.
+                        </p>
+                        <a href="#" class="block text-center bg-purple-100 text-purple-600 py-2 rounded-lg hover:bg-purple-200 transition duration-300">
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Profile 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
+                         alt="Profile 2" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">David, 32</h3>
+                        <p class="text-gray-600 mb-4">Software Engineer | San Francisco</p>
+                        <p class="text-gray-600 mb-4">
+                            Tech enthusiast with a passion for music and hiking. Seeking a partner who values intellectual connection and outdoor activities.
+                        </p>
+                        <a href="#" class="block text-center bg-purple-100 text-purple-600 py-2 rounded-lg hover:bg-purple-200 transition duration-300">
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Profile 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=689&q=80" 
+                         alt="Profile 3" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Priya, 30</h3>
+                        <p class="text-gray-600 mb-4">Marketing Manager | Chicago</p>
+                        <p class="text-gray-600 mb-4">
+                            Creative soul who loves cooking and art exhibitions. Looking for someone who appreciates culture and has a good sense of humor.
+                        </p>
+                        <a href="#" class="block text-center bg-purple-100 text-purple-600 py-2 rounded-lg hover:bg-purple-200 transition duration-300">
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Profile 4 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
+                         alt="Profile 4" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Michael, 35</h3>
+                        <p class="text-gray-600 mb-4">Architect | Boston</p>
+                        <p class="text-gray-600 mb-4">
+                            Design enthusiast who enjoys photography and exploring new cities. Seeking a partner who values creativity and meaningful connections.
+                        </p>
+                        <a href="#" class="block text-center bg-purple-100 text-purple-600 py-2 rounded-lg hover:bg-purple-200 transition duration-300">
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12" data-aos="fade-up">
+                <a href="#" class="btn-secondary inline-block">
+                    Explore More Profiles
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Success Stories</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Hear from our happy couples</p>
+            </div>
+            
+            <div class="testimonial-slider relative max-w-4xl mx-auto" data-aos="fade-up">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-slide bg-white p-8 rounded-lg shadow-lg">
+                    <div class="flex items-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80" 
+                             alt="Testimonial 1" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Aisha & Rahul</h3>
+                            <p class="text-gray-600">Married December 2023</p>
+                        </div>
+                        <div class="ml-auto">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "We connected on The ConnectSphere in early 2023, and it was like we had known each other forever. The platform's compatibility matching was spot on! After six months of getting to know each other, we decided to take the next step. We're so grateful to have found each other here."
+                    </p>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-slide bg-white p-8 rounded-lg shadow-lg hidden">
+                    <div class="flex items-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1491349174775-aaafddd81942?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
+                             alt="Testimonial 2" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Jennifer & David</h3>
+                            <p class="text-gray-600">Engaged March 2024</p>
+                        </div>
+                        <div class="ml-auto">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "I was skeptical about online matchmaking, but The ConnectSphere changed my perspective completely. The verification process made me feel safe, and the detailed profiles helped me find someone who truly shares my values. We're planning our wedding for next summer!"
+                    </p>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-slide bg-white p-8 rounded-lg shadow-lg hidden">
+                    <div class="flex items-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
+                             alt="Testimonial 3" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h3 class="text-xl font-bold">Michael & Sarah</h3>
+                            <p class="text-gray-600">Married June 2023</p>
+                        </div>
+                        <div class="ml-auto">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "What sets The ConnectSphere apart is how they balance modern technology with traditional values. Our families were able to be involved in the process while still giving us space to develop our relationship. The relationship guidance resources were incredibly helpful too."
+                    </p>
+                </div>
+                
+                <!-- Testimonial Navigation -->
+                <div class="flex justify-center mt-8 space-x-2">
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-purple-600"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300"></button>
+                </div>
+                
+                <!-- Testimonial Arrows -->
+                <button class="testimonial-prev absolute top-1/2 -left-12 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-purple-600 hover:bg-purple-100 transition duration-300">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="testimonial-next absolute top-1/2 -right-12 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-purple-600 hover:bg-purple-100 transition duration-300">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Relationship Blog</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Insights and advice for your journey</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" 
+                         alt="Blog 1" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-500 mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>May 10, 2024</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock mr-2"></i>
+                            <span>5 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 hover:text-purple-600 transition duration-300">5 Communication Tips for New Relationships</h3>
+                        <p class="text-gray-600 mb-4">
+                            Effective communication is the foundation of any successful relationship. Learn how to express your needs and listen actively to your partner.
+                        </p>
+                        <a href="#" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80" 
+                         alt="Blog 2" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-500 mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>April 28, 2024</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock mr-2"></i>
+                            <span>7 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 hover:text-purple-600 transition duration-300">Balancing Tradition and Modern Values in Relationships</h3>
+                        <p class="text-gray-600 mb-4">
+                            Explore how couples are finding harmony between cultural traditions and contemporary relationship dynamics.
+                        </p>
+                        <a href="#" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Blog Post 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80" 
+                         alt="Blog 3" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-500 mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>April 15, 2024</span>
+                            <span class="mx-2">•</span>
+                            <i class="far fa-clock mr-2"></i>
+                            <span>4 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 hover:text-purple-600 transition duration-300">Red Flags to Watch for When Online Dating</h3>
+                        <p class="text-gray-600 mb-4">
+                            Stay safe while finding love online. Learn to identify warning signs and protect yourself while using matchmaking platforms.
+                        </p>
+                        <a href="#" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12" data-aos="fade-up">
+                <a href="#" class="btn-secondary inline-block">
+                    View All Articles
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Answers to common questions about our platform</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto" data-aos="fade-up">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="faq-question w-full flex items-center justify-between bg-white p-4 text-left focus:outline-none">
+                        <span class="text-lg font-medium">How does The ConnectSphere verify profiles?</span>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer bg-white px-4 pb-4 hidden">
+                        <p class="text-gray-600">
+                            We use a multi-step verification process that includes ID verification, social media validation, and optional video verification. Our team manually reviews profiles to ensure authenticity and maintain a safe community for all members.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="faq-question w-full flex items-center justify-between bg-white p-4 text-left focus:outline-none">
+                        <span class="text-lg font-medium">Is The ConnectSphere free to use?</span>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer bg-white px-4 pb-4 hidden">
+                        <p class="text-gray-600">
+                            We offer a free basic membership that allows you to create a profile and browse matches. Our premium subscription unlocks additional features like advanced filters, unlimited messaging, and priority profile visibility. We believe in providing value before asking for payment.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="faq-question w-full flex items-center justify-between bg-white p-4 text-left focus:outline-none">
+                        <span class="text-lg font-medium">How is The ConnectSphere different from other dating apps?</span>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer bg-white px-4 pb-4 hidden">
+                        <p class="text-gray-600">
+                            Unlike casual dating apps, we focus on meaningful connections leading to long-term relationships and marriage. Our matching algorithm considers values, life goals, and compatibility factors beyond physical attraction. We also offer family involvement options and relationship guidance resources.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="faq-question w-full flex items-center justify-between bg-white p-4 text-left focus:outline-none">
+                        <span class="text-lg font-medium">Can family members be involved in the matchmaking process?</span>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer bg-white px-4 pb-4 hidden">
+                        <p class="text-gray-600">
+                            Yes, we offer an optional family involvement feature. Members can invite parents or guardians to create linked profiles, view potential matches, and provide input. However, the final decision always remains with the primary member, balancing tradition with individual choice.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="faq-question w-full flex items-center justify-between bg-white p-4 text-left focus:outline-none">
+                        <span class="text-lg font-medium">How does The ConnectSphere protect my privacy?</span>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer bg-white px-4 pb-4 hidden">
+                        <p class="text-gray-600">
+                            We take privacy seriously. Your personal information is encrypted and never shared with third parties. You control what information is visible on your profile, and our messaging system allows you to communicate without sharing personal contact details until you're ready.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="cta" class="py-20 bg-gradient-to-r from-purple-600 to-pink-500 relative overflow-hidden">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center max-w-3xl mx-auto" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Find Your Perfect Match?</h2>
+                <p class="text-white text-opacity-90 text-lg mb-8">
+                    Join thousands of members who have already found their life partners through The ConnectSphere. Your journey to meaningful connection starts here.
+                </p>
+                <a href="#" class="btn-white inline-block animate-pulse">
+                    Get Started Now
+                </a>
+            </div>
+        </div>
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
+            <i class="fas fa-heart text-white text-6xl absolute top-10 left-10"></i>
+            <i class="fas fa-ring text-white text-5xl absolute bottom-20 left-1/4"></i>
+            <i class="fas fa-comment-dots text-white text-4xl absolute top-1/3 right-10"></i>
+            <i class="fas fa-user-friends text-white text-5xl absolute bottom-10 right-1/4"></i>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Contact Us</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">We'd love to hear from you</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Contact Form -->
+                <div class="md:w-1/2" data-aos="fade-right">
+                    <form id="contact-form" class="bg-white p-8 rounded-lg shadow-lg">
+                        <div class="mb-6">
+                            <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="John Doe" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-gray-700 font-medium mb-2">Your Email</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="john@example.com" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="How can we help you?" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-gray-700 font-medium mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="Your message here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="md:w-1/2" data-aos="fade-left">
+                    <div class="bg-purple-50 p-8 rounded-lg shadow-lg h-full">
+                        <h3 class="text-2xl font-bold mb-6 text-purple-600">Get in Touch</h3>
+                        <p class="text-gray-600 mb-8">
+                            Have questions or need assistance? Our team is here to help you navigate your journey to finding meaningful connections.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-1">Our Location</h4>
+                                    <p class="text-gray-600">123 Love Street, Relationship City, RC 10001</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4 mt-1">
+                                    <i class="fas fa-envelope text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-1">Email Us</h4>
+                                    <p class="text-gray-600">support@connectsphere.com</p>
+                                    <p class="text-gray-600">info@connectsphere.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4 mt-1">
+                                    <i class="fas fa-phone-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-1">Call Us</h4>
+                                    <p class="text-gray-600">+1 (555) 123-4567</p>
+                                    <p class="text-gray-600">+1 (555) 987-6543</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4 mt-1">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-1">Working Hours</h4>
+                                    <p class="text-gray-600">Monday - Friday: 9:00 AM - 8:00 PM</p>
+                                    <p class="text-gray-600">Saturday: 10:00 AM - 6:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-lg font-medium mb-4">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 hover:bg-purple-600 hover:text-white transition duration-300">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">The ConnectSphere</h3>
+                    <p class="text-gray-400 mb-4">
+                        Where meaningful connections happen. Our platform combines traditional values with modern technology to help you find your perfect match.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="#profiles" class="text-gray-400 hover:text-white transition duration-300">Profiles</a></li>
+                        <li><a href="#blog" class="text-gray-400 hover:text-white transition duration-300">Blog</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Safety Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Success Stories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Subscribe to Our Newsletter</h3>
+                    <p class="text-gray-400 mb-4">
+                        Get the latest updates, tips, and success stories delivered to your inbox.
+                    </p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email address" class="px-4 py-2 w-full rounded-l-lg focus:outline-none text-gray-900">
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400">&copy; 2024 The ConnectSphere. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- No registration or login modals -->
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
