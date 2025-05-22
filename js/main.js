@@ -2,32 +2,14 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Navigation Functionality
-    const signupBtn = document.getElementById('signup-btn');
-    const mobileSignupBtn = document.getElementById('mobile-signup-btn');
     const joinNowBtn = document.getElementById('join-now-btn');
     
-    // Direct navigation to Find Yourself One page
-    if (signupBtn) {
-        signupBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Sign up button clicked - navigating to Find Yourself One page');
-            window.location.href = 'find-yourself-one.html';
-        });
-    }
-    
-    if (mobileSignupBtn) {
-        mobileSignupBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Mobile sign up button clicked - navigating to Find Yourself One page');
-            window.location.href = 'find-yourself-one.html';
-        });
-    }
-    
+    // Direct navigation to Sign Up page
     if (joinNowBtn) {
         joinNowBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Join now button clicked - navigating to Find Yourself One page');
-            window.location.href = 'find-yourself-one.html';
+            console.log('Join now button clicked - navigating to Sign Up page');
+            window.location.href = 'signup.html';
         });
     }
     

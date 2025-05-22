@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a2be2" />
+      <stop offset="100%" stop-color="#ff69b4" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#gradient)" />
+  
+  <!-- User silhouette -->
+  <circle cx="100" cy="80" r="35" fill="white" opacity="0.9" />
+  <path d="M50,180 C50,130 150,130 150,180" fill="white" opacity="0.9" />
+  
+  <!-- Border -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="white" stroke-width="3" />
+</svg>

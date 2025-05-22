@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relationship Advisor - The ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Chat-specific styles */
+        .chat-container {
+            height: 70vh;
+            max-height: 600px;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        
+        .chat-header {
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+        
+        .chat-messages {
+            height: calc(100% - 120px);
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(to right, #8a2387, #e94057, #f27121);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background: #f3f4f6;
+            color: #1f2937;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        
+        /* Formatted message styles */
+        .message-content p {
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+        
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .message-content .bullet-point {
+            padding-left: 1rem;
+            position: relative;
+        }
+        
+        .message-content .numbered-point {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .message-content strong {
+            font-weight: 600;
+        }
+        
+        .message-content em {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .chat-input {
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+        }
+        
+        .typing-indicator {
+            padding: 0.5rem 1rem;
+        }
+        
+        .typing-indicator .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #9ca3af;
+            margin-right: 3px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-indicator .dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-indicator .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Header -->
+    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-purple-600">
+                <span class="text-pink-500">The</span> ConnectSphere
+            </a>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                <a href="chat-advisor.html" class="nav-link active">Relationship Advisor</a>
+                <a href="index.html#blog" class="nav-link">Blog</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300">
+                    <i class="fas fa-user mr-1"></i> My Profile
+                </a>
+                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                </a>
+            </nav>
+            <!-- Mobile Navigation Toggle -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex flex-col space-y-3">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="index.html#about" class="nav-link">About</a>
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                    <a href="chat-advisor.html" class="nav-link active">Relationship Advisor</a>
+                    <a href="index.html#blog" class="nav-link">Blog</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">
+                        <i class="fas fa-user mr-1"></i> My Profile
+                    </a>
+                    <a href="#" id="mobile-logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full text-center hover:bg-gray-600 hover:shadow-lg transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <h1 class="text-4xl font-bold text-purple-600 mb-2">Relationship Advisor</h1>
+                <p class="text-gray-600 text-lg">Get personalized advice and support for your dating journey</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <!-- Chat Interface -->
+                <div id="chat-container" class="chat-container flex flex-col">
+                    <!-- Chat Header -->
+                    <div class="chat-header bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+                                <i class="fas fa-robot text-pink-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">ConnectSphere Advisor</h3>
+                                <p class="text-xs opacity-80">Relationship & Dating Expert</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <!-- AI Provider Toggle -->
+                            <div class="mr-4 flex items-center">
+                                <span class="text-xs mr-2">AI Provider:</span>
+                                <div class="bg-white bg-opacity-20 text-white text-sm rounded-md px-2 py-1">
+                                    Gemini AI
+                                </div>
+                            </div>
+                            <button id="clear-chat" class="text-white hover:text-gray-200 transition">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Messages -->
+                    <div id="chat-messages" class="chat-messages"></div>
+                    
+                    <!-- Typing Indicator -->
+                    <div id="typing-indicator" class="typing-indicator hidden">
+                        <div class="bot-message" style="max-width: 100px;">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="chat-input bg-gray-100 p-4 flex items-center">
+                        <input 
+                            type="text" 
+                            id="message-input" 
+                            class="flex-1 border border-gray-300 rounded-l-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                            placeholder="Type your message here..."
+                        >
+                        <button 
+                            id="send-button" 
+                            class="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-r-full px-6 py-2 hover:opacity-90 transition"
+                        >
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Chat Info -->
+                <div class="mt-8 bg-white p-6 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-xl font-bold text-purple-600 mb-3">How the Relationship Advisor Can Help</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                            <span>Get personalized dating advice based on your profile</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                            <span>Ask questions about relationship challenges</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                            <span>Learn effective communication strategies for dating</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                            <span>Get suggestions for conversation starters and date ideas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                            <span>Receive support for navigating online dating</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4"><span class="text-pink-500">The</span> ConnectSphere</h3>
+                    <p class="text-gray-400">Connecting hearts, one profile at a time. Find your perfect match in our vibrant community of like-minded individuals.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="index.html#about" class="text-gray-400 hover:text-white transition duration-300">About</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="find-yourself-one.html" class="text-gray-400 hover:text-white transition duration-300">Find Yourself One</a></li>
+                        <li><a href="chat-advisor.html" class="text-gray-400 hover:text-white transition duration-300">Relationship Advisor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Subscribe to Our Newsletter</h4>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 w-full rounded-l-lg focus:outline-none">
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 mt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400">&copy; 2024 The ConnectSphere. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Simple authentication check - for demo purposes only
+        // In a real app, this would verify against a database
+        function checkUserLoggedIn() {
+            return localStorage.getItem('userLoggedIn') === 'true';
+        }
+        
+        // Get user data from localStorage - for demo purposes only
+        function getUserData() {
+            const userData = localStorage.getItem('userData');
+            return userData ? JSON.parse(userData) : null;
+        }
+        
+        // Make auth functions available to chatbot.js
+        window.auth = {
+            checkUserLoggedIn,
+            getUserData
+        };
+    </script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

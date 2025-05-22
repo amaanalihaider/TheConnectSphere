@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - The ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Error message */
+        .error-message {
+            background-color: #fed7d7;
+            border-left: 4px solid #f56565;
+            color: #c53030;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.25rem;
+            display: none;
+        }
+        
+        /* Success message */
+        .success-message {
+            background-color: #c6f6d5;
+            border-left: 4px solid #48bb78;
+            color: #2f855a;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.25rem;
+            display: none;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="flex flex-col items-center">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading your profile data...</div>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-purple-600">
+                <span class="text-pink-500">The</span> ConnectSphere
+            </a>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                <a href="index.html#blog" class="nav-link">Blog</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 active">
+                    <i class="fas fa-user mr-1"></i> My Profile
+                </a>
+                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                </a>
+            </nav>
+            <!-- Mobile Navigation Toggle -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex flex-col space-y-3">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="index.html#about" class="nav-link">About</a>
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                    <a href="index.html#blog" class="nav-link">Blog</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 active">
+                        <i class="fas fa-user mr-1"></i> My Profile
+                    </a>
+                    <a href="#" id="mobile-logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <h1 class="text-4xl font-bold text-purple-600 mb-2">My Profile</h1>
+                <p class="text-gray-600 text-lg">Manage your personal information and preferences</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Profile Card -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
+                    <!-- Profile Header -->
+                    <div class="relative">
+                        <!-- Cover Photo -->
+                        <div class="h-48 bg-gradient-to-r from-purple-400 to-pink-500"></div>
+                        <!-- Profile Photo -->
+                        <div class="absolute bottom-0 left-0 w-full transform translate-y-1/2 flex justify-center">
+                            <div class="w-32 h-32 rounded-full border-4 border-white bg-gray-200 flex items-center justify-center overflow-hidden">
+                                <i class="fas fa-user text-gray-400 text-5xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Content -->
+                    <div class="pt-20 px-6 pb-6">
+                        <!-- Edit/Save Buttons -->
+                        <div class="flex justify-end mb-6">
+                            <button id="save-profile-btn" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300 mr-2">
+                                <i class="fas fa-save mr-1"></i> Save Changes
+                            </button>
+                        </div>
+                        
+                        <!-- Status Messages -->
+                        <div id="error-message" class="error-message"></div>
+                        <div id="success-message" class="success-message"></div>
+                        
+                        <!-- Retry Button (Only visible when there's an error) -->
+                        <div class="flex justify-end mb-6">
+                            <button id="retry-btn" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-300 hidden">
+                                <i class="fas fa-sync-alt mr-1"></i> Retry
+                            </button>
+                        </div>
+                        
+                        <!-- Profile Form -->
+                        <form id="profile-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Personal Information Section -->
+                            <div class="col-span-2">
+                                <h2 class="text-xl font-semibold text-purple-600 mb-4 border-b border-gray-200 pb-2">Personal Information</h2>
+                            </div>
+                            
+                            <!-- First Name -->
+                            <div class="mb-4">
+                                <label for="first-name" class="block text-gray-700 font-medium mb-2">First Name*</label>
+                                <input type="text" id="first-name" name="first-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            </div>
+                            
+                            <!-- Last Name -->
+                            <div class="mb-4">
+                                <label for="last-name" class="block text-gray-700 font-medium mb-2">Last Name*</label>
+                                <input type="text" id="last-name" name="last-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            </div>
+                            
+                            <!-- Birthdate -->
+                            <div class="mb-4">
+                                <label for="birthdate" class="block text-gray-700 font-medium mb-2">Birthdate*</label>
+                                <input type="date" id="birthdate" name="birthdate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            </div>
+                            
+                            <!-- Gender -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Gender*</label>
+                                <div class="flex flex-wrap gap-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="Male" class="form-radio text-purple-600">
+                                        <span class="ml-2">Male</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="Female" class="form-radio text-purple-600">
+                                        <span class="ml-2">Female</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="Non-binary" class="form-radio text-purple-600">
+                                        <span class="ml-2">Non-binary</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="Prefer not to say" class="form-radio text-purple-600">
+                                        <span class="ml-2">Prefer not to say</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- City -->
+                            <div class="mb-4">
+                                <label for="city" class="block text-gray-700 font-medium mb-2">City*</label>
+                                <input type="text" id="city" name="city" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            </div>
+                            
+                            <!-- Bio -->
+                            <div class="col-span-2 mb-4">
+                                <label for="bio" class="block text-gray-700 font-medium mb-2">Bio</label>
+                                <textarea id="bio" name="bio" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                            </div>
+                            
+                            <!-- Interests Section -->
+                            <div class="col-span-2">
+                                <h2 class="text-xl font-semibold text-purple-600 mb-4 border-b border-gray-200 pb-2">Interests</h2>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Music" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Music</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Movies" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Movies</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Sports" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Sports</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Reading" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Reading</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Cooking" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Cooking</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Travel" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Travel</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Photography" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Photography</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Art" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Art</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="interests" value="Gaming" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Gaming</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Relationship Types Section -->
+                            <div class="col-span-2">
+                                <h2 class="text-xl font-semibold text-purple-600 mb-4 border-b border-gray-200 pb-2">Relationship Types</h2>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="relationship-type" value="Friendship" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Friendship</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="relationship-type" value="Dating" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Dating</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="relationship-type" value="Long-term" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Long-term</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="relationship-type" value="Casual" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Casual</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Gender Preferences Section -->
+                            <div class="col-span-2">
+                                <h2 class="text-xl font-semibold text-purple-600 mb-4 border-b border-gray-200 pb-2">Gender Preferences</h2>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="gender-preference" value="Male" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Male</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="gender-preference" value="Female" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Female</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="gender-preference" value="Non-binary" class="form-checkbox text-purple-600">
+                                        <span class="ml-2">Non-binary</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a href="index.html" class="text-2xl font-bold">
+                        <span class="text-pink-500">The</span> <span class="text-purple-400">ConnectSphere</span>
+                    </a>
+                    <p class="text-gray-400 mt-2">Find your perfect connection</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400">
+                <p>&copy; 2023 The ConnectSphere. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script>
+        // Initialize the Supabase client directly in this page to avoid any module loading issues
+        const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+    <script>
+        // Variable to store current profile data
+        let currentProfileData = null;
+        
+        // Helper functions
+        function getCheckedValues(name) {
+            const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        function setCheckboxValues(name, values) {
+            if (!values || !Array.isArray(values)) return;
+            
+            document.querySelectorAll(`input[name="${name}"]`).forEach(checkbox => {
+                checkbox.checked = values.includes(checkbox.value);
+            });
+        }
+        
+        // Save profile data to Supabase
+        async function saveProfileData() {
+            // Hide any existing messages
+            hideErrorMessage();
+            hideSuccessMessage();
+            
+            // Show loading overlay
+            showLoading('Saving your profile data...');
+            
+            try {
+                // Get current user
+                const user = await getUserData();
+                if (!user) {
+                    console.error('No authenticated user found');
+                    hideLoading();
+                    showErrorMessage('Authentication error. Please log in to save your profile.');
+                    return;
+                }
+                
+                // Get form values
+                const firstName = document.getElementById('first-name').value.trim();
+                const lastName = document.getElementById('last-name').value.trim();
+                
+                if (!firstName) {
+                    hideLoading();
+                    showErrorMessage('First name is required.');
+                    return;
+                }
+                
+                // Get birthdate input value
+                const birthdate = document.getElementById('birthdate').value;
+                if (!birthdate) {
+                    hideLoading();
+                    showErrorMessage('Birthdate is required.');
+                    return;
+                }
+                
+                // Gender validation
+                const gender = document.querySelector('input[name="gender"]:checked')?.value;
+                if (!gender) {
+                    hideLoading();
+                    showErrorMessage('Please select a gender.');
+                    return;
+                }
+                
+                // City validation
+                const city = document.getElementById('city').value.trim();
+                if (!city) {
+                    hideLoading();
+                    showErrorMessage('City is required.');
+                    return;
+                }
+                
+                // Bio validation (optional field)
+                const bio = document.getElementById('bio').value.trim();
+                
+                // Get interests and relationship types
+                const interests = getCheckedValues('interests');
+                const relationshipTypes = getCheckedValues('relationship-type');
+                const genderPreferences = getCheckedValues('gender-preference');
+                
+                // Prepare profile data according to the schema
+                const profileData = {
+                    first_name: firstName,
+                    last_name: lastName,
+                    birthdate: birthdate,
+                    gender: gender,
+                    city: city,
+                    bio: bio || '',
+                    interests: interests,
+                    relationship_types: relationshipTypes,
+                    gender_preferences: genderPreferences,
+                    updated_at: new Date().toISOString()
+                };
+                
+                console.log('Updating profile with data:', profileData);
+                
+                // Update profile in Supabase
+                const { data: updatedProfile, error: updateError } = await supabaseClient
+                    .from('profiles')
+                    .update(profileData)
+                    .eq('id', user.id)
+                    .select()
+                    .single();
+                
+                if (updateError) {
+                    console.error('Error updating profile:', updateError);
+                    hideLoading();
+                    showErrorMessage('Error updating profile. Please try again.');
+                    return;
+                }
+                
+                console.log('Profile updated successfully:', updatedProfile);
+                
+                // Update current profile data
+                currentProfileData = updatedProfile;
+                
+                // Save to localStorage
+                saveProfileToLocalStorage(updatedProfile);
+                
+                // Hide loading overlay
+                hideLoading();
+                
+                // Show success message
+                showSuccessMessage('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error in saveProfileData:', error);
+                hideLoading();
+                showErrorMessage('An unexpected error occurred while saving your profile.');
+            }
+        }
+        
+        // Load user profile data from Supabase and localStorage
+        async function loadUserProfile() {
+            // Hide any existing messages
+            hideErrorMessage();
+            hideSuccessMessage();
+            
+            // Show loading overlay
+            showLoading();
+            
+            try {
+                console.log('Loading user profile data...');
+                
+                // First check if we have cached profile data in localStorage
+                const cachedProfile = getProfileFromLocalStorage();
+                if (cachedProfile) {
+                    console.log('Found cached profile data in localStorage:', cachedProfile);
+                    // Display cached data immediately while we fetch fresh data
+                    populateProfileForm(cachedProfile);
+                }
+                
+                // Get current authenticated user from Supabase
+                const user = await getUserData();
+                if (!user) {
+                    console.error('No authenticated user found');
+                    hideLoading();
+                    showErrorMessage('Authentication error. Please log in using the form below or refresh the page.');
+                    
+                    // Show a simplified login form instead of redirecting
+                    const profileContainer = document.querySelector('.profile-container');
+                    if (profileContainer) {
+                        profileContainer.innerHTML = `
+                            <div class="bg-white p-8 rounded-lg shadow-md max-w-md mx-auto mt-8">
+                                <h2 class="text-2xl font-bold text-purple-600 mb-6">Login Required</h2>
+                                <p class="mb-4">Please log in to view and edit your profile.</p>
+                                <form id="inline-login-form" class="space-y-4">
+                                    <div>
+                                        <label for="inline-email" class="block text-sm font-medium text-gray-700">Email</label>
+                                        <input type="email" id="inline-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50">
+                                    </div>
+                                    <div>
+                                        <label for="inline-password" class="block text-sm font-medium text-gray-700">Password</label>
+                                        <input type="password" id="inline-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50">
+                                    </div>
+                                    <button type="submit" class="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">Log In</button>
+                                </form>
+                                <div class="mt-4 text-center">
+                                    <a href="signup.html" class="text-purple-600 hover:text-purple-800">Don't have an account? Sign up</a>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Add event listener for the inline login form
+                        const inlineLoginForm = document.getElementById('inline-login-form');
+                        if (inlineLoginForm) {
+                            inlineLoginForm.addEventListener('submit', async (e) => {
+                                e.preventDefault();
+                                const email = document.getElementById('inline-email').value;
+                                const password = document.getElementById('inline-password').value;
+                                
+                                if (!email || !password) {
+                                    showErrorMessage('Please enter both email and password.');
+                                    return;
+                                }
+                                
+                                showLoading('Logging in...');
+                                
+                                try {
+                                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                                        email,
+                                        password
+                                    });
+                                    
+                                    if (error) {
+                                        hideLoading();
+                                        showErrorMessage(error.message || 'Failed to log in. Please check your credentials.');
+                                        return;
+                                    }
+                                    
+                                    // Reload the page to show the profile
+                                    window.location.reload();
+                                } catch (err) {
+                                    hideLoading();
+                                    showErrorMessage('An unexpected error occurred. Please try again.');
+                                    console.error('Login error:', err);
+                                }
+                            });
+                        }
+                    }
+                    return;
+                }
+                
+                console.log('Current user:', user);
+                
+                // Get the user's profile data from Supabase
+                // Don't use .single() as it requires exactly one row
+                const { data, error: profileError } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id);
+                    
+                // Check if we got any profile data
+                let profile = null;
+                if (data && data.length > 0) {
+                    profile = data[0];
+                }
+                    
+                if (profileError) {
+                    console.error('Error fetching profile:', profileError);
+                    
+                    // If we have cached data, we can continue with that
+                    if (cachedProfile) {
+                        hideLoading();
+                        showErrorMessage('Could not fetch latest profile data. Showing cached data.');
+                        return;
+                    } else {
+                        // No cached data and error fetching from database
+                        hideLoading();
+                        showErrorMessage('Error loading profile data. Please try again.');
+                        return;
+                    }
+                }
+                
+                if (!profile) {
+                    // Try to create a minimal profile if none exists
+                    try {
+                        console.log('No profile found, creating a minimal profile...');
+                        // Extract metadata from user object
+                        const userMetadata = user.user_metadata || {};
+                        
+                        // Prepare profile data
+                        const profileData = {
+                            id: user.id,
+                            first_name: userMetadata.first_name || '',
+                            last_name: userMetadata.last_name || '',
+                            username: userMetadata.username || user.email.split('@')[0],
+                            birthdate: userMetadata.birthdate || new Date().toISOString().split('T')[0],
+                            gender: userMetadata.gender || 'Not specified',
+                            city: userMetadata.city || '',
+                            bio: userMetadata.bio || '',
+                            interests: userMetadata.interests || [],
+                            relationship_types: userMetadata.relationship_types || [],
+                            gender_preferences: userMetadata.gender_preferences || [],
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        };
+                        
+                        // Insert the profile into the database
+                        const { data: newProfile, error: createError } = await supabaseClient
+                            .from('profiles')
+                            .insert(profileData)
+                            .select()
+                            .single();
+                            
+                        if (createError) {
+                            console.error('Error creating profile:', createError);
+                            hideLoading();
+                            showErrorMessage('Error creating profile. Please try again.');
+                            return;
+                        }
+                        
+                        console.log('Created new profile:', newProfile);
+                        currentProfileData = newProfile;
+                        populateProfileForm(newProfile);
+                        saveProfileToLocalStorage(newProfile);
+                        hideLoading();
+                        showSuccessMessage('Profile created successfully!');
+                        return;
+                    } catch (createError) {
+                        console.error('Error creating profile:', createError);
+                        hideLoading();
+                        showErrorMessage('Error creating profile. Please try again.');
+                        return;
+                    }
+                }
+                
+                // We have successfully fetched profile data
+                console.log('Loaded profile from Supabase:', profile);
+                currentProfileData = profile;
+                
+                // Save to localStorage for offline access
+                saveProfileToLocalStorage(profile);
+                
+                // Populate the form with the profile data
+                populateProfileForm(profile);
+                
+                // Hide loading overlay
+                hideLoading();
+            } catch (error) {
+                console.error('Unexpected error loading profile:', error);
+                hideLoading();
+                showErrorMessage('An unexpected error occurred. Please try again.');
+            }
+        }
+        
+        // Populate the profile form with data
+        function populateProfileForm(profile) {
+            if (!profile) return;
+            
+            console.log('Populating form with profile data:', profile);
+            
+            // Fill in the form fields with profile data
+            document.getElementById('first-name').value = profile.first_name || '';
+            document.getElementById('last-name').value = profile.last_name || '';
+            document.getElementById('birthdate').value = profile.birthdate || '';
+            document.getElementById('city').value = profile.city || '';
+            document.getElementById('bio').value = profile.bio || '';
+            
+            // Set gender radio button
+            if (profile.gender) {
+                const genderRadio = document.querySelector(`input[name="gender"][value="${profile.gender}"]`);
+                if (genderRadio) genderRadio.checked = true;
+            }
+            
+            // Set checkboxes for interests
+            setCheckboxValues('interests', profile.interests);
+            
+            // Set checkboxes for relationship types
+            setCheckboxValues('relationship-type', profile.relationship_types);
+            
+            // Set checkboxes for gender preferences
+            setCheckboxValues('gender-preference', profile.gender_preferences);
+        }
+        
+        // Save profile data to localStorage
+        function saveProfileToLocalStorage(profile) {
+            if (!profile) return;
+            
+            try {
+                localStorage.setItem('connectsphere_profile', JSON.stringify(profile));
+                console.log('Profile saved to localStorage');
+            } catch (error) {
+                console.error('Error saving profile to localStorage:', error);
+            }
+        }
+        
+        // Get profile data from localStorage
+        function getProfileFromLocalStorage() {
+            try {
+                const profileData = localStorage.getItem('connectsphere_profile');
+                if (!profileData) return null;
+                
+                return JSON.parse(profileData);
+            } catch (error) {
+                console.error('Error retrieving profile from localStorage:', error);
+                return null;
+            }
+        }
+        
+        // Show loading overlay
+        function showLoading(message = 'Loading...') {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const loadingText = document.querySelector('#loading-overlay .loading-text');
+            
+            if (loadingText) {
+                loadingText.textContent = message;
+            }
+            
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('hidden');
+                loadingOverlay.classList.add('active');
+            }
+        }
+        
+        // Hide loading overlay
+        function hideLoading() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('active');
+                loadingOverlay.classList.add('hidden');
+            }
+        }
+        
+        // Show error message
+        function showErrorMessage(message) {
+            const errorContainer = document.getElementById('error-message');
+            if (errorContainer) {
+                errorContainer.textContent = message;
+                errorContainer.style.display = 'block';
+                
+                // Show retry button
+                const retryBtn = document.getElementById('retry-btn');
+                if (retryBtn) {
+                    retryBtn.classList.remove('hidden');
+                }
+            }
+        }
+        
+        // Hide error message
+        function hideErrorMessage() {
+            const errorContainer = document.getElementById('error-message');
+            if (errorContainer) {
+                errorContainer.style.display = 'none';
+                
+                // Hide retry button
+                const retryBtn = document.getElementById('retry-btn');
+                if (retryBtn) {
+                    retryBtn.classList.add('hidden');
+                }
+            }
+        }
+        
+        // Show success message
+        function showSuccessMessage(message) {
+            const successContainer = document.getElementById('success-message');
+            if (successContainer) {
+                successContainer.textContent = message;
+                successContainer.style.display = 'block';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    hideSuccessMessage();
+                }, 5000);
+            }
+        }
+        
+        // Hide success message
+        function hideSuccessMessage() {
+            const successContainer = document.getElementById('success-message');
+            if (successContainer) {
+                successContainer.style.display = 'none';
+            }
+        }
+        
+        // Get user data from Supabase
+        async function getUserData() {
+            try {
+                // First check if we have a session
+                const { data: session } = await supabaseClient.auth.getSession();
+                
+                if (!session || !session.session) {
+                    console.error('No active session found');
+                    return null;
+                }
+                
+                // If we have a session, get the user
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                return user;
+            } catch (error) {
+                console.error('Error getting user data:', error);
+                return null;
+            }
+        }
+        
+        // Initialize the profile page
+        async function initProfilePage() {
+            try {
+                // Add event listeners
+                document.getElementById('save-profile-btn').addEventListener('click', saveProfileData);
+                document.getElementById('retry-btn').addEventListener('click', loadUserProfile);
+                
+                // Load user profile data
+                await loadUserProfile();
+            } catch (error) {
+                console.error('Error initializing profile page:', error);
+                showErrorMessage('Error initializing profile page. Please refresh the page.');
+            }
+        }
+        
+        // Add event listener for document ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the profile page
+            initProfilePage();
+            
+            // Initialize AOS animations
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // Add event listener for mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Add event listener for logout button
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    try {
+                        // First check if we have an active session
+                        const { data: sessionData } = await supabaseClient.auth.getSession();
+                        
+                        // If no active session, just redirect to home
+                        if (!sessionData?.session) {
+                            console.log('No active session found, redirecting to home');
+                            window.location.href = 'index.html';
+                            return;
+                        }
+                        
+                        // Otherwise, try to sign out
+                        const { error } = await supabaseClient.auth.signOut();
+                        
+                        if (error) {
+                            console.error('Error signing out:', error);
+                            // Don't show alert to user, just log the error
+                        }
+                        
+                        // Redirect to home page after logout
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        console.error('Error signing out:', error);
+                        // Just redirect to home page
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+            
+            // Also add event listener for mobile logout button
+            const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+            if (mobileLogoutBtn) {
+                mobileLogoutBtn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    try {
+                        // First check if we have an active session
+                        const { data: sessionData } = await supabaseClient.auth.getSession();
+                        
+                        // If no active session, just redirect to home
+                        if (!sessionData?.session) {
+                            console.log('No active session found, redirecting to home');
+                            window.location.href = 'index.html';
+                            return;
+                        }
+                        
+                        // Otherwise, try to sign out
+                        const { error } = await supabaseClient.auth.signOut();
+                        
+                        if (error) {
+                            console.error('Error signing out:', error);
+                            // Don't show alert to user, just log the error
+                        }
+                        
+                        // Redirect to home page after logout
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        console.error('Error signing out:', error);
+                        // Just redirect to home page
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

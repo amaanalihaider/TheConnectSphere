@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center" data-aos="fade-up">
+        <div class="text-purple-600 mb-6">
+            <i class="fas fa-envelope-open-text text-6xl"></i>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-purple-600 mb-4">Verify Your Email</h1>
+        
+        <div class="mb-6">
+            <div class="text-gray-600 mb-4">
+                We've sent a verification link to your email address. Please check your inbox and click the link to complete your registration.
+            </div>
+            
+            <div class="text-sm text-gray-500 mb-4">
+                The link will expire in <span id="countdown" class="font-bold text-purple-600">60</span> seconds
+            </div>
+            
+            <div class="mb-6 hidden" id="expired-message">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    The verification link has expired. Please try again.
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <button id="resend-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition duration-300 hidden">
+                Resend Verification Email
+            </button>
+            
+            <a href="index.html" class="block mt-4 text-sm text-purple-600 hover:underline">
+                Return to Home Page
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Supabase credentials (same as in supabaseClient.js)
+        const SUPABASE_URL = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
+        
+        // Initialize Supabase client
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Countdown timer
+        let timeLeft = 60;
+        const countdownElement = document.getElementById('countdown');
+        const expiredMessage = document.getElementById('expired-message');
+        const resendBtn = document.getElementById('resend-btn');
+        
+        let countdownInterval = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                expiredMessage.classList.remove('hidden');
+                resendBtn.classList.remove('hidden');
+            }
+        }, 1000);
+        
+        // Get email from localStorage
+        const email = localStorage.getItem('pendingVerificationEmail');
+        if (!email) {
+            // If no email is stored, redirect to signup
+            alert('No pending verification found. Please sign up again.');
+            window.location.href = 'signup.html';
+        }
+        
+        // Resend button handler
+        resendBtn.addEventListener('click', async () => {
+            if (!email) {
+                alert('Email address not found. Please try signing up again.');
+                window.location.href = 'signup.html';
+                return;
+            }
+            
+            try {
+                // Re-trigger verification email - using the correct method for Supabase v2
+                const { error } = await supabaseClient.auth.resendEmailConfirmation({
+                    email: email,
+                    options: {
+                        emailRedirectTo: window.location.origin + '/verification-success.html'
+                    }
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Reset timer
+                timeLeft = 60;
+                countdownElement.textContent = timeLeft;
+                expiredMessage.classList.add('hidden');
+                resendBtn.classList.add('hidden');
+                
+                // Restart countdown
+                clearInterval(countdownInterval);
+                countdownInterval = setInterval(() => {
+                    timeLeft--;
+                    countdownElement.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        expiredMessage.classList.remove('hidden');
+                        resendBtn.classList.remove('hidden');
+                    }
+                }, 1000);
+                
+                alert('Verification email resent! Please check your inbox.');
+            } catch (err) {
+                alert('Error resending verification email: ' + err.message);
+                console.error('Resend error:', err);
+            }
+        });
+    </script>
+</body>
+</html>

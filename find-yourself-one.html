@@ -24,7 +24,7 @@
                 <a href="find-yourself-one.html" class="nav-link active">Find Yourself One</a>
                 <a href="index.html#blog" class="nav-link">Blog</a>
                 <a href="index.html#contact" class="nav-link">Contact</a>
-                <a href="#" id="profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300">
+                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300">
                     <i class="fas fa-user mr-1"></i> My Profile
                 </a>
             </nav>
@@ -47,7 +47,7 @@
                     <a href="find-yourself-one.html" class="nav-link active">Find Yourself One</a>
                     <a href="index.html#blog" class="nav-link">Blog</a>
                     <a href="index.html#contact" class="nav-link">Contact</a>
-                    <a href="#" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">
+                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">
                         <i class="fas fa-user mr-1"></i> My Profile
                     </a>
                 </div>
@@ -382,12 +382,137 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Load the Supabase JavaScript client library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/authNavigation.js"></script>
     <script>
+        // Using the global supabaseClient variable
+        // Using the global auth functions
+        
         // Find Yourself One Page Specific JavaScript
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in (mock)
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            // Check authentication status
+            checkAuthState((user) => {
+                console.log('Auth state checked:', user ? 'Authenticated' : 'Not authenticated');
+                isLoggedIn = !!user; // Update the isLoggedIn variable based on user state
+            });
+            // Load profiles from Supabase
+            loadProfiles();
+            
+            // Function to load profiles from Supabase
+            async function loadProfiles() {
+                try {
+                    const { data: profiles, error } = await supabase
+                        .from('profiles')
+                        .select('*');
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    if (profiles && profiles.length > 0) {
+                        renderProfiles(profiles);
+                    }
+                } catch (error) {
+                    console.error('Error loading profiles:', error);
+                }
+            }
+            
+            // Function to render profiles
+            function renderProfiles(profiles) {
+                const profilesGrid = document.getElementById('profiles-grid');
+                
+                // Clear existing profiles
+                profilesGrid.innerHTML = '';
+                
+                // Render each profile
+                profiles.forEach(profile => {
+                    // Create profile card
+                    const profileCard = document.createElement('div');
+                    profileCard.className = 'bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105';
+                    profileCard.dataset.age = profile.age || '';
+                    profileCard.dataset.city = profile.city || '';
+                    profileCard.dataset.gender = profile.gender || '';
+                    profileCard.dataset.relationshipType = JSON.stringify(profile.relationship_ty || []);
+                    
+                    // Create profile content
+                    profileCard.innerHTML = `
+                        <img src="${profile.avatar_url || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'}" 
+                             alt="${profile.first_name}" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-xl font-bold text-purple-600">${profile.first_name}, ${profile.age || 'N/A'}</h3>
+                                <span class="text-sm text-gray-500">${profile.city || 'N/A'}</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">${profile.bio || 'No bio available.'}</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${profile.interests ? profile.interests.map(interest => 
+                                    `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span>`
+                                ).join('') : ''}
+                                ${profile.relationship_ty ? profile.relationship_ty.map(type => 
+                                    `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span>`
+                                ).join('') : ''}
+                            </div>
+                            <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300 connect-btn" data-user-id="${profile.user_id}">
+                                Connect
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add to grid
+                    profilesGrid.appendChild(profileCard);
+                });
+                
+                // Add event listeners to connect buttons
+                document.querySelectorAll('.connect-btn').forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const userId = this.dataset.userId;
+                        
+                        try {
+                            // Get current user
+                            const currentUser = await window.auth.getUserData();
+                            
+                            if (!currentUser) {
+                                alert('You must be logged in to connect with other users.');
+                                return;
+                            }
+                            
+                            // Create connection request in connections table
+                            const { error } = await supabase
+                                .from('connections')
+                                .insert([
+                                    {
+                                        requester_id: currentUser.id,
+                                        receiver_id: userId,
+                                        status: 'pending',
+                                        created_at: new Date()
+                                    }
+                                ]);
+                            
+                            if (error) {
+                                throw error;
+                            }
+                            
+                            // Update button to show pending
+                            this.textContent = 'Request Sent';
+                            this.disabled = true;
+                            this.classList.add('bg-gray-400');
+                            this.classList.remove('from-purple-600', 'to-pink-500');
+                            
+                        } catch (error) {
+                            console.error('Error connecting with user:', error);
+                            alert('Failed to send connection request. Please try again.');
+                        }
+                    });
+                });
+            }
+            
+            // Authentication check is handled by the checkAuthState function above
+            // Variables for UI state based on authentication
+            let isLoggedIn = false; // This will be updated by the checkAuthState callback
             
             // Search functionality
             const searchInput = document.getElementById('profile-search');
