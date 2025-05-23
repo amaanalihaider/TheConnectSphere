@@ -334,20 +334,35 @@ async function handleAuthRedirect() {
 // Update UI based on authentication state
 function updateAuthUI(user) {
     checkAuthState(({ isAuthenticated }) => {
+        console.log('Updating UI based on auth state:', isAuthenticated);
+        
         // Elements to show when authenticated
         const authElements = document.querySelectorAll('.auth-link');
         const nonAuthElements = document.querySelectorAll('.non-auth-link');
+        const loginBtn = document.getElementById('login-btn');
+        const profileBtn = document.getElementById('profile-btn');
             
         if (isAuthenticated) {
+            console.log('User is authenticated, showing auth elements');
+            
             // Show authenticated elements
             authElements.forEach(el => {
-                el.style.display = 'block';
+                el.classList.remove('hidden');
+                el.style.display = 'inline-block';
             });
                 
             // Hide non-authenticated elements
             nonAuthElements.forEach(el => {
+                el.classList.add('hidden');
                 el.style.display = 'none';
             });
+            
+            // Ensure profile button is visible
+            if (profileBtn) {
+                profileBtn.classList.remove('hidden');
+                profileBtn.style.display = 'inline-block';
+                console.log('Profile button should be visible now');
+            }
                 
             // Update profile link if available
             const profileLink = document.getElementById('profile-link');
@@ -355,15 +370,34 @@ function updateAuthUI(user) {
                 profileLink.href = 'my-profile.html';
             }
         } else {
+            console.log('User is not authenticated, hiding auth elements');
+            
             // Hide authenticated elements
             authElements.forEach(el => {
+                el.classList.add('hidden');
                 el.style.display = 'none';
             });
                 
             // Show non-authenticated elements
             nonAuthElements.forEach(el => {
-                el.style.display = 'block';
+                el.classList.remove('hidden');
+                el.style.display = 'inline-block';
             });
+            
+            // Ensure login button is visible with !important to override any other styles
+            if (loginBtn) {
+                loginBtn.classList.remove('hidden');
+                loginBtn.setAttribute('style', 'display: inline-block !important');
+                console.log('Login button should be visible now with important flag');
+            }
+            
+            // Also ensure mobile login button is visible
+            const mobileLoginBtn = document.getElementById('mobile-login-btn');
+            if (mobileLoginBtn) {
+                mobileLoginBtn.classList.remove('hidden');
+                mobileLoginBtn.setAttribute('style', 'display: block !important');
+                console.log('Mobile login button should be visible now');
+            }
         }
     });
 }
