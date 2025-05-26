@@ -1,5 +1,38 @@
 // Authentication navigation helper
-// Using the global auth functions
+
+// Local implementation of checkAuthState function
+function checkAuthState(callback) {
+    if (!supabaseClient) {
+        console.error('Supabase client not available');
+        callback({ isAuthenticated: false, user: null });
+        return;
+    }
+    
+    supabaseClient.auth.getSession().then(({ data, error }) => {
+        if (error) {
+            console.error('Error checking auth state:', error);
+            callback({ isAuthenticated: false, user: null });
+            return;
+        }
+        
+        if (data && data.session) {
+            supabaseClient.auth.getUser().then(({ data: userData, error: userError }) => {
+                if (userError) {
+                    console.error('Error getting user data:', userError);
+                    callback({ isAuthenticated: false, user: null });
+                    return;
+                }
+                
+                callback({ isAuthenticated: true, user: userData.user });
+            });
+        } else {
+            callback({ isAuthenticated: false, user: null });
+        }
+    }).catch(err => {
+        console.error('Unexpected error in checkAuthState:', err);
+        callback({ isAuthenticated: false, user: null });
+    });
+}
 
 // Initialize auth navigation when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -11,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const initialNonAuthElements = document.querySelectorAll('.non-auth-link');
     const loginBtn = document.getElementById('login-btn');
     const mobileLoginBtn = document.getElementById('mobile-login-btn');
+    const authLinks = document.querySelector('.auth-links');
+    const nonAuthLinks = document.querySelector('.non-auth-links');
     
     // Hide all auth elements by default
     initialAuthElements.forEach(el => {
@@ -35,17 +70,22 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileLoginBtn.setAttribute('style', 'display: block !important');
     }
     
+    // Handle new navigation containers
+    if (authLinks) {
+        authLinks.classList.add('hidden');
+        authLinks.style.display = 'none';
+    }
+    
+    if (nonAuthLinks) {
+        nonAuthLinks.classList.remove('hidden');
+        nonAuthLinks.style.display = 'flex';
+    }
+    
     // Wait a short time to ensure all scripts are loaded
     setTimeout(function() {
         // Check if supabaseClient is available
         if (typeof supabaseClient === 'undefined') {
             console.error('Supabase client not loaded properly');
-            return;
-        }
-        
-        // Check if auth functions are available
-        if (typeof checkAuthState !== 'function') {
-            console.error('Auth functions not loaded properly');
             return;
         }
         
@@ -88,6 +128,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     loginBtn.style.display = 'none';
                     console.log('Login button hidden');
                 }
+                
+                // Handle new navigation elements
+                const nonAuthLinks = document.querySelector('.non-auth-links');
+                const authLinks = document.querySelector('.auth-links');
+                
+                if (nonAuthLinks) {
+                    nonAuthLinks.classList.add('hidden');
+                    nonAuthLinks.style.display = 'none';
+                    console.log('Non-auth links container hidden');
+                }
+                
+                if (authLinks) {
+                    authLinks.classList.remove('hidden');
+                    authLinks.style.display = 'flex';
+                    console.log('Auth links container shown');
+                }
             } else {
                 console.log('User is not authenticated, hiding auth elements');
                 
@@ -116,6 +172,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     mobileLoginBtn.classList.remove('hidden');
                     mobileLoginBtn.setAttribute('style', 'display: block !important');
                     console.log('Mobile login button should be visible now');
+                }
+                
+                // Handle new navigation elements
+                const nonAuthLinks = document.querySelector('.non-auth-links');
+                const authLinks = document.querySelector('.auth-links');
+                
+                if (nonAuthLinks) {
+                    nonAuthLinks.classList.remove('hidden');
+                    nonAuthLinks.style.display = 'flex';
+                    console.log('Non-auth links container shown');
+                }
+                
+                if (authLinks) {
+                    authLinks.classList.add('hidden');
+                    authLinks.style.display = 'none';
+                    console.log('Auth links container hidden');
                 }
             }
             

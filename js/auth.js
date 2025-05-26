@@ -405,11 +405,38 @@ function updateAuthUI(user) {
 // Set up logout functionality
 function setupLogout() {
     const logoutBtn = document.getElementById('logout-btn');
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
     
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
+    // Create logout confirmation modal if it doesn't exist
+    if (!document.getElementById('logout-confirmation-modal')) {
+        const modal = document.createElement('div');
+        modal.id = 'logout-confirmation-modal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4 transform transition-all">
+                <div class="text-center">
+                    <i class="fas fa-sign-out-alt text-4xl text-purple-600 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Confirm Logout</h3>
+                    <p class="text-gray-600 mb-6">Are you sure you want to log out of your account?</p>
+                    <div class="flex justify-center space-x-4">
+                        <button id="cancel-logout-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition duration-300">
+                            Cancel
+                        </button>
+                        <button id="confirm-logout-btn" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:from-purple-700 hover:to-pink-700 transition duration-300">
+                            Yes, Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Add event listeners to the modal buttons
+        document.getElementById('cancel-logout-btn').addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+        
+        document.getElementById('confirm-logout-btn').addEventListener('click', async () => {
             try {
                 // First check if we have an active session
                 const { data: sessionData } = await supabaseClient.auth.getSession();
@@ -426,17 +453,39 @@ function setupLogout() {
                 
                 if (error) {
                     console.error('Error signing out:', error);
-                    // Don't show alert to user, just log the error
                 }
                 
                 // Redirect to home page after logout attempt (even if there was an error)
                 window.location.href = 'index.html';
             } catch (err) {
                 console.error('Unexpected error during logout:', err);
-                // Don't show alert to user, just redirect
                 window.location.href = 'index.html';
             }
         });
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Add click event to logout buttons
+    const showLogoutModal = (e) => {
+        e.preventDefault();
+        const modal = document.getElementById('logout-confirmation-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    };
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', showLogoutModal);
+    }
+    
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', showLogoutModal);
     }
 }
 

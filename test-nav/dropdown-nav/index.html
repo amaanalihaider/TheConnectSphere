@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Navigation - The ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Dropdown Navigation Bar -->
+    <header class="fixed w-full sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
+                        <span>The</span> <span>ConnectSphere</span>
+                    </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#about" class="nav-link">About</a>
+                    
+                    <!-- Dropdown: Features -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Features
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#features" class="dropdown-item">
+                                <i class="fas fa-star mr-2 text-purple-500"></i>Overview
+                            </a>
+                            <a href="#testimonials" class="dropdown-item">
+                                <i class="fas fa-comment-dots mr-2 text-purple-500"></i>Testimonials
+                            </a>
+                            <a href="#pricing" class="dropdown-item">
+                                <i class="fas fa-tag mr-2 text-purple-500"></i>Pricing
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown: Find Match -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Find Match
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="find-yourself-one.html" class="dropdown-item">
+                                <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                            </a>
+                            <a href="find-yourself-one.html#search" class="dropdown-item">
+                                <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                            </a>
+                            <a href="find-yourself-one.html#connections" class="dropdown-item">
+                                <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown: Relationship Tools -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Relationship Tools
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="chat-advisor.html" class="dropdown-item">
+                                <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                            </a>
+                            <a href="health-dashboard.html" class="dropdown-item">
+                                <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="subscription.html" class="nav-link">Subscription</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="non-auth-links">
+                        <a href="login.html" class="login-btn"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" class="signup-btn"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Auth Links (shown when logged in) -->
+                    <div class="auth-links hidden">
+                        <a href="find-yourself-one.html" class="find-one-btn"><i class="fas fa-search mr-2"></i>Find One</a>
+                        
+                        <!-- Dropdown: Profile -->
+                        <div class="relative profile-dropdown-container">
+                            <button class="profile-btn"><i class="fas fa-user-circle mr-2"></i>My Profile</button>
+                            <div class="profile-dropdown">
+                                <div class="p-3 border-b border-gray-100">
+                                    <p class="font-medium text-gray-800">John Doe</p>
+                                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="my-profile.html" class="dropdown-item">
+                                        <i class="fas fa-user mr-2 text-purple-500"></i>View Profile
+                                    </a>
+                                    <a href="relationship-dashboard.html" class="dropdown-item">
+                                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Health Dashboard
+                                    </a>
+                                    <a href="subscription.html" class="dropdown-item">
+                                        <i class="fas fa-crown mr-2 text-purple-500"></i>Subscription
+                                    </a>
+                                </div>
+                                <div class="p-3 border-t border-gray-100">
+                                    <a href="#" class="logout-btn w-full flex justify-center">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-button">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu hidden md:hidden py-2 px-4">
+                <a href="#home" class="mobile-link active">Home</a>
+                <a href="#about" class="mobile-link">About</a>
+                
+                <!-- Mobile Dropdown: Features -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button">
+                        Features <i class="fas fa-chevron-down ml-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="#features" class="mobile-dropdown-item">
+                            <i class="fas fa-star mr-2 text-purple-500"></i>Overview
+                        </a>
+                        <a href="#testimonials" class="mobile-dropdown-item">
+                            <i class="fas fa-comment-dots mr-2 text-purple-500"></i>Testimonials
+                        </a>
+                        <a href="#pricing" class="mobile-dropdown-item">
+                            <i class="fas fa-tag mr-2 text-purple-500"></i>Pricing
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Dropdown: Find Match -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button">
+                        Find Match <i class="fas fa-chevron-down ml-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="find-yourself-one.html" class="mobile-dropdown-item">
+                            <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                        </a>
+                        <a href="find-yourself-one.html#search" class="mobile-dropdown-item">
+                            <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                        </a>
+                        <a href="find-yourself-one.html#connections" class="mobile-dropdown-item">
+                            <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Dropdown: Relationship Tools -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button">
+                        Relationship Tools <i class="fas fa-chevron-down ml-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="chat-advisor.html" class="mobile-dropdown-item">
+                            <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                        </a>
+                        <a href="health-dashboard.html" class="mobile-dropdown-item">
+                            <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="subscription.html" class="mobile-link">Subscription</a>
+                <a href="#blog" class="mobile-link">Blog</a>
+                <a href="#contact" class="mobile-link">Contact</a>
+                
+                <!-- Mobile Auth Links -->
+                <div class="pt-6 border-t border-gray-200 mt-4">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="mobile-non-auth-links space-y-3">
+                        <a href="login.html" class="mobile-auth-link"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" class="mobile-signup-link"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Auth Links (shown when logged in) -->
+                    <div class="mobile-auth-links hidden space-y-3">
+                        <a href="find-yourself-one.html" class="mobile-find-one-link"><i class="fas fa-search mr-2"></i>Find Yourself One</a>
+                        
+                        <!-- Mobile Profile Links -->
+                        <a href="my-profile.html" class="mobile-profile-btn"><i class="fas fa-user-circle mr-2"></i>My Profile</a>
+                        <a href="edit-profile.html" class="mobile-auth-link"><i class="fas fa-cog mr-2"></i>Settings</a>
+                        <a href="health-dashboard.html" class="mobile-auth-link"><i class="fas fa-heartbeat mr-2"></i>Health Dashboard</a>
+                        <a href="subscription.html" class="mobile-auth-link"><i class="fas fa-crown mr-2"></i>Subscription</a>
+                        <a href="messages.html" class="mobile-auth-link"><i class="fas fa-envelope mr-2"></i>Messages</a>
+                        
+                        <a href="#" class="mobile-logout-link">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Content for Demo -->
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center" data-aos="fade-up" data-aos-duration="800">
+                <h1 class="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">Dropdown Navigation Design</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">A clean navigation with organized dropdown menus for better categorization and improved user experience.</p>
+                
+                <div class="bg-white p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Key Features</h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-purple-500 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-left">Organized dropdown menus to reduce top-level navigation items</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-purple-500 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-left">Smooth animations with elegant transitions for dropdown visibility</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-purple-500 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-left">Logical grouping of related features with intuitive icons</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-purple-500 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-left">Fully responsive with mobile-friendly accordion dropdowns</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 text-purple-500 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-left">Clean visual hierarchy with subtle hover effects and gradients</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8" data-aos="fade-up" data-aos-delay="400">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-purple-500 text-4xl mb-4">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Desktop Experience</h3>
+                        <p class="text-gray-600">Elegant dropdown menus with hover effects and visual indicators for active states.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="text-purple-500 text-4xl mb-4">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Mobile Experience</h3>
+                        <p class="text-gray-600">Collapsible menu with smooth accordion animations for a seamless mobile experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript for Menu Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Mobile dropdown toggles
+            const mobileDropdownButtons = document.querySelectorAll('.mobile-dropdown-button');
+            
+            mobileDropdownButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const dropdownMenu = this.nextElementSibling;
+                    dropdownMenu.classList.toggle('hidden');
+                    
+                    // Toggle icon rotation
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            });
+            
+            // Scroll behavior
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -52,22 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Get Supabase client for Edge Function
         const getSupabaseClient = () => {
+            // Check if the global supabaseClient is already available
             if (window.supabaseClient) {
                 console.log('Contact form: Using existing supabaseClient');
                 return window.supabaseClient;
             }
             
-            if (typeof supabase !== 'undefined') {
-                const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
-                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
-                console.log('Contact form: Creating new Supabase client');
-                const client = supabase.createClient(supabaseUrl, supabaseKey);
-                window.supabaseClient = client;
-                console.log('Contact form: Supabase client created successfully');
-                return client;
+            // Check if the global variable from supabaseClient.js is available
+            if (typeof supabaseClient !== 'undefined') {
+                console.log('Contact form: Using global supabaseClient');
+                window.supabaseClient = supabaseClient;
+                return supabaseClient;
             }
             
-            throw new Error('Supabase library not available');
+            throw new Error('Supabase client not available. Please ensure supabaseClient.js is loaded before contact-form.js');
         };
 
         // Submit form directly to the database now that RLS is disabled

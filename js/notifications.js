@@ -62,20 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Setup event listeners
   setupEventListeners();
 
-  // Create a test notification if we're authenticated but have no notifications
-  if (currentUser && currentUser.id) {
-    // First check if we have any notifications
-    const { data: existingNotifications } = await supabase
-      .from('notifications')
-      .select('id')
-      .eq('recipient_id', currentUser.id)
-      .limit(1);
-    
-    if (!existingNotifications || existingNotifications.length === 0) {
-      console.log('No existing notifications found, creating a test notification');
-      createTestNotification();
-    }
-  }
+  // No longer creating test notifications on startup
 
   // Setup real-time subscription for new notifications
   subscribeToNotifications();
@@ -198,35 +185,7 @@ function initializeDemoNotifications() {
   // Demo mode not needed anymore
 }
 
-/**
- * Create a test notification to demonstrate the notification system
- */
-async function createTestNotification() {
-  try {
-    // Insert a test notification directly into the database
-    const { data, error } = await supabase
-      .from('notifications')
-      .insert([
-        {
-          recipient_id: currentUser.id,
-          sender_id: currentUser.id,
-          type: 'welcome',
-          message: 'Welcome to ConnectSphere! Your notification system is working.',
-          read: false
-        }
-      ]);
-      
-    if (error) {
-      console.error('Error creating test notification:', error);
-    } else {
-      console.log('Test notification created successfully');
-      // Refresh notifications to show the new one
-      fetchNotifications();
-    }
-  } catch (err) {
-    console.error('Exception creating test notification:', err);
-  }
-}
+// Test notification function removed
 
 /**
  * Fetch notifications from Supabase database
@@ -376,11 +335,7 @@ async function fetchNotifications() {
     } else {
       console.log(`%c[NOTIFICATIONS INFO] ${timestamp} - No notifications found for user ${currentUser.id}`, 'color: #607D8B; font-style: italic');
       
-      // Check if we should create a test notification for debugging
-      if (window.location.search.includes('test_notification=true')) {
-        console.log(`%c[NOTIFICATIONS DEBUG] ${timestamp} - Test parameter detected, creating test notification`, 'color: #9C27B0; font-weight: bold');
-        createTestNotification();
-      }
+      // Test notification creation removed
       
       updateNotificationPanel([]);
       updateNotificationBell([]);
@@ -504,6 +459,9 @@ function updateNotificationPanel(notifications) {
   
   // Attach event listeners to mark as read when clicked
   attachNotificationClickHandlers();
+  
+  // Initialize drag functionality for each notification item
+  initNotificationDrag();
   
   // If the panel is closed, make sure to show a visual indicator that there are notifications
   if (!panel.classList.contains('active') && notifications.some(n => !n.read)) {

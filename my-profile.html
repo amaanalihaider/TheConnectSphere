@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dropdown-nav.css">
+    <link rel="stylesheet" href="css/profile-button-fix.css">
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
     <style>
         /* Loading Overlay */
         .loading-overlay {
@@ -89,19 +92,22 @@
                 <span class="text-pink-500">The</span> ConnectSphere
             </a>
             <!-- Desktop Navigation -->
-            <nav class="hidden md:flex space-x-6">
+            <nav class="md:flex space-x-6">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="index.html#about" class="nav-link">About</a>
                 <a href="index.html#features" class="nav-link">Features</a>
                 <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                <a href="chat-advisor.html" class="nav-link">Relationship Advisor</a>
+                <a href="subscription.html" class="nav-link">Subscription</a>
                 <a href="index.html#blog" class="nav-link">Blog</a>
                 <a href="index.html#contact" class="nav-link">Contact</a>
-                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 active">
+                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 auth-link active">
                     <i class="fas fa-user mr-1"></i> My Profile
                 </a>
-                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300">
+                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300 auth-link">
                     <i class="fas fa-sign-out-alt mr-1"></i> Logout
                 </a>
+                <a href="login.html" id="login-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 non-auth-link">Sign In</a>
             </nav>
             <!-- Mobile Navigation Toggle -->
             <div class="md:hidden">
@@ -120,6 +126,8 @@
                     <a href="index.html#about" class="nav-link">About</a>
                     <a href="index.html#features" class="nav-link">Features</a>
                     <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                    <a href="chat-advisor.html" class="nav-link">Relationship Advisor</a>
+                    <a href="subscription.html" class="nav-link">Subscription</a>
                     <a href="index.html#blog" class="nav-link">Blog</a>
                     <a href="index.html#contact" class="nav-link">Contact</a>
                     <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 active">
@@ -352,13 +360,12 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script>
-        // Initialize the Supabase client directly in this page to avoid any module loading issues
-        const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
-        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/authNavigation.js"></script>
+    <script src="js/subscription-validator.js"></script>
+    <!-- Supabase client is already initialized in supabaseClient.js -->
     <script>
         // Variable to store current profile data
         let currentProfileData = null;
@@ -443,14 +450,18 @@
                     first_name: firstName,
                     last_name: lastName,
                     birthdate: birthdate,
-                    gender: gender,
+                    gender: gender, // This should be a string, not an array
                     city: city,
                     bio: bio || '',
-                    interests: interests,
-                    relationship_types: relationshipTypes,
-                    gender_preferences: genderPreferences,
+                    // Ensure arrays are properly formatted for PostgreSQL
+                    interests: interests.length > 0 ? interests : null,
+                    relationship_types: relationshipTypes.length > 0 ? relationshipTypes : null,
+                    gender_preferences: genderPreferences.length > 0 ? genderPreferences : null,
                     updated_at: new Date().toISOString()
                 };
+                
+                // Log the formatted data
+                console.log('Formatted profile data:', profileData);
                 
                 console.log('Updating profile with data:', profileData);
                 

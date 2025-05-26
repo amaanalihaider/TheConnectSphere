@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission - The ConnectSphere</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            color: #333333;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+        
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 10px 0 0;
+            font-size: 16px;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 35px 30px;
+        }
+        
+        .info-row {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eeeeee;
+            display: flex;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #8B5CF6;
+            width: 100px;
+            flex-shrink: 0;
+        }
+        
+        .info-value {
+            flex-grow: 1;
+            word-break: break-word;
+        }
+        
+        .message-section h3 {
+            color: #8B5CF6;
+            margin: 25px 0 15px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .message-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #8B5CF6;
+            margin-bottom: 25px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        
+        .timestamp {
+            text-align: center;
+            font-size: 13px;
+            color: #999999;
+            margin-top: 25px;
+            font-style: italic;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+        }
+        
+        .brand {
+            margin: 0;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .brand-highlight {
+            color: #EC4899;
+        }
+        
+        .tagline {
+            margin: 5px 0 0;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 300;
+        }
+        
+        .social-links {
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #8B5CF6;
+            text-decoration: none;
+        }
+        
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(139, 92, 246, 0.4);
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 30px 10px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td align="center">
+                    <div class="container" style="max-width: 650px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <!-- Header -->
+                        <div class="header" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); padding: 30px 20px; text-align: center; position: relative;">
+                            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 0.5px;">New Contact Form Submission</h1>
+                            <p style="color: rgba(255, 255, 255, 0.9); margin: 10px 0 0; font-size: 16px; font-weight: 300;">Someone has reached out through your website</p>
+                            <img src="https://i.imgur.com/7nrDlZE.png" alt="Contact Icon" style="width: 60px; height: 60px; margin-top: 15px;">
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="content" style="padding: 35px 30px;">
+                            <!-- Name -->
+                            <div class="info-row" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eeeeee; display: flex;">
+                                <div class="info-label" style="font-weight: 600; color: #8B5CF6; width: 100px; flex-shrink: 0;">Name:</div>
+                                <div class="info-value" style="flex-grow: 1; word-break: break-word;">{{name}}</div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="info-row" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eeeeee; display: flex;">
+                                <div class="info-label" style="font-weight: 600; color: #8B5CF6; width: 100px; flex-shrink: 0;">Email:</div>
+                                <div class="info-value" style="flex-grow: 1; word-break: break-word;">{{email}}</div>
+                            </div>
+                            
+                            <!-- Subject -->
+                            <div class="info-row" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eeeeee; display: flex;">
+                                <div class="info-label" style="font-weight: 600; color: #8B5CF6; width: 100px; flex-shrink: 0;">Subject:</div>
+                                <div class="info-value" style="flex-grow: 1; word-break: break-word;">{{subject}}</div>
+                            </div>
+                            
+                            <!-- Message -->
+                            <div class="message-section">
+                                <h3 style="color: #8B5CF6; margin: 25px 0 15px; font-weight: 600; font-size: 18px;">Message:</h3>
+                                <div class="message-box" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #8B5CF6; margin-bottom: 25px; font-size: 15px; line-height: 1.7;">
+                                    {{message}}
+                                </div>
+                            </div>
+                            
+                            <!-- Action Button -->
+                            <div style="text-align: center; margin: 30px 0 20px;">
+                                <a href="{{dashboardUrl}}" class="button" style="display: inline-block; padding: 10px 25px; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; text-decoration: none; border-radius: 50px; font-weight: 500; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);">
+                                    View in Dashboard
+                                </a>
+                            </div>
+                            
+                            <!-- Timestamp -->
+                            <p class="timestamp" style="text-align: center; font-size: 13px; color: #999999; margin-top: 25px; font-style: italic;">
+                                Submitted at: {{timestamp}}
+                            </p>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="footer" style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eeeeee;">
+                            <p class="brand" style="margin: 0; font-weight: 700; font-size: 16px;">
+                                <span class="brand-highlight" style="color: #EC4899;">The</span> ConnectSphere
+                            </p>
+                            <p class="tagline" style="margin: 5px 0 0; color: #666666; font-size: 14px; font-weight: 300;">
+                                Your social networking platform
+                            </p>
+                            
+                            <!-- Social Links -->
+                            <div class="social-links" style="margin-top: 15px;">
+                                <a href="#" style="display: inline-block; margin: 0 8px; color: #8B5CF6; text-decoration: none;">
+                                    <img src="https://i.imgur.com/5tCVDYT.png" alt="Facebook" style="width: 24px; height: 24px;">
+                                </a>
+                                <a href="#" style="display: inline-block; margin: 0 8px; color: #8B5CF6; text-decoration: none;">
+                                    <img src="https://i.imgur.com/vPb3s1V.png" alt="Twitter" style="width: 24px; height: 24px;">
+                                </a>
+                                <a href="#" style="display: inline-block; margin: 0 8px; color: #8B5CF6; text-decoration: none;">
+                                    <img src="https://i.imgur.com/cXuKHTP.png" alt="Instagram" style="width: 24px; height: 24px;">
+                                </a>
+                            </div>
+                            
+                            <!-- Copyright -->
+                            <p style="margin-top: 15px; font-size: 12px; color: #999999;">
+                                &copy; 2025 The ConnectSphere. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

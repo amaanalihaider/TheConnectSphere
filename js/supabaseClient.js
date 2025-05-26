@@ -102,14 +102,64 @@ async function signUp(email, password, userData) {
 }
 
 async function signIn(email, password) {
-    return await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
+    console.log(`%c[AUTH] Login attempt for user: ${email}`, 'color: #4CAF50; font-weight: bold');
+    const timestamp = new Date().toISOString();
+    
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+        
+        if (error) {
+            console.error(`%c[AUTH ERROR] ${timestamp} - Login failed for ${email}: ${error.message}`, 'color: #F44336; font-weight: bold');
+            return { data, error };
+        }
+        
+        console.log(`%c[AUTH SUCCESS] ${timestamp} - User logged in: ${email} (${data.user.id})`, 'color: #2196F3; font-weight: bold');
+        console.table({
+            'User ID': data.user.id,
+            'Email': email,
+            'Login Time': timestamp,
+            'Session Expires': new Date(data.session.expires_at * 1000).toLocaleString()
+        });
+        
+        return { data, error };
+    } catch (err) {
+        console.error(`%c[AUTH ERROR] ${timestamp} - Unexpected error during login for ${email}:`, 'color: #F44336; font-weight: bold', err);
+        return { data: null, error: err };
+    }
 }
 
 async function signOut() {
-    return await supabaseClient.auth.signOut();
+    try {
+        // Get current user before signing out
+        const { data: userData } = await supabaseClient.auth.getUser();
+        const timestamp = new Date().toISOString();
+        
+        if (userData && userData.user) {
+            console.log(`%c[AUTH] Logout attempt for user: ${userData.user.email} (${userData.user.id})`, 'color: #FF9800; font-weight: bold');
+        }
+        
+        const { error } = await supabaseClient.auth.signOut();
+        
+        if (error) {
+            console.error(`%c[AUTH ERROR] ${timestamp} - Logout failed:`, 'color: #F44336; font-weight: bold', error);
+            return { error };
+        }
+        
+        if (userData && userData.user) {
+            console.log(`%c[AUTH SUCCESS] ${timestamp} - User logged out: ${userData.user.email} (${userData.user.id})`, 'color: #2196F3; font-weight: bold');
+        } else {
+            console.log(`%c[AUTH SUCCESS] ${timestamp} - User logged out (no user data available)`, 'color: #2196F3; font-weight: bold');
+        }
+        
+        return { error: null };
+    } catch (err) {
+        const timestamp = new Date().toISOString();
+        console.error(`%c[AUTH ERROR] ${timestamp} - Unexpected error during logout:`, 'color: #F44336; font-weight: bold', err);
+        return { error: err };
+    }
 }
 
 async function getCurrentUser() {
@@ -118,4 +168,131 @@ async function getCurrentUser() {
 
 async function getSession() {
     return await supabaseClient.auth.getSession();
+}
+
+// Social authentication functions
+window.signInWithGoogle = async function() {
+    return await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: window.location.origin + '/verification-success.html'
+        }
+    });
+}
+
+// Check authentication state - this function is used by authNavigation.js
+async function checkAuthState(callback) {
+    const timestamp = new Date().toISOString();
+    console.log(`%c[AUTH CHECK] ${timestamp} - Checking authentication state`, 'color: #9C27B0; font-style: italic');
+    
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
+        
+        if (error) {
+            console.error(`%c[AUTH ERROR] ${timestamp} - Error checking auth state:`, 'color: #F44336; font-weight: bold', error);
+            callback({ isAuthenticated: false, user: null });
+            return;
+        }
+        
+        if (data.session) {
+            // Session exists, user is logged in
+            const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+            
+            if (userError) {
+                console.error(`%c[AUTH ERROR] ${timestamp} - Error getting user data:`, 'color: #F44336; font-weight: bold', userError);
+                callback({ isAuthenticated: false, user: null });
+                return;
+            }
+            
+            // Log session information
+            const sessionInfo = {
+                'User ID': userData.user.id,
+                'Email': userData.user.email,
+                'Session Expires': new Date(data.session.expires_at * 1000).toLocaleString(),
+                'Time Remaining': Math.floor((data.session.expires_at * 1000 - Date.now()) / 60000) + ' minutes',
+                'Provider': userData.user.app_metadata.provider || 'email',
+                'Last Sign In': new Date(userData.user.last_sign_in_at).toLocaleString()
+            };
+            
+            console.log(`%c[AUTH SUCCESS] ${timestamp} - User authenticated: ${userData.user.email} (${userData.user.id})`, 'color: #4CAF50; font-weight: bold');
+            console.table(sessionInfo);
+            
+            // Check if session is about to expire (less than 30 minutes)
+            const minutesRemaining = Math.floor((data.session.expires_at * 1000 - Date.now()) / 60000);
+            if (minutesRemaining < 30) {
+                console.warn(`%c[AUTH WARNING] ${timestamp} - Session expiring soon: ${minutesRemaining} minutes remaining`, 'color: #FF9800; font-weight: bold');
+            }
+            
+            callback({ isAuthenticated: true, user: userData.user });
+        } else {
+            console.log(`%c[AUTH INFO] ${timestamp} - No active session found`, 'color: #607D8B; font-style: italic');
+            callback({ isAuthenticated: false, user: null });
+        }
+    } catch (err) {
+        console.error(`%c[AUTH ERROR] ${timestamp} - Unexpected error in checkAuthState:`, 'color: #F44336; font-weight: bold', err);
+        callback({ isAuthenticated: false, user: null });
+    }
+}
+
+// Make the checkAuthState function globally accessible
+window.checkAuthState = checkAuthState;
+
+// Handle OAuth callback
+window.handleOAuthCallback = async function() {
+    const { data, error } = await supabaseClient.auth.getSession();
+    
+    if (error) {
+        console.error('Error checking session after OAuth:', error);
+        return { data: null, error };
+    }
+    
+    // If user is authenticated after OAuth callback
+    if (data.session) {
+        try {
+            // Check if profile exists
+            const { data: profileData, error: profileError } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', data.session.user.id)
+                .single();
+            
+            if (profileError && profileError.code !== 'PGRST116') { // PGRST116 is 'not found'
+                console.error('Error checking for existing profile:', profileError);
+            }
+            
+            // If profile doesn't exist, create it from OAuth data
+            if (!profileData) {
+                const user = data.session.user;
+                const metadata = user.user_metadata || {};
+                
+                // Prepare profile data from OAuth
+                const profileData = {
+                    id: user.id,
+                    first_name: metadata.full_name?.split(' ')[0] || '',
+                    last_name: metadata.full_name?.split(' ').slice(1).join(' ') || '',
+                    username: metadata.preferred_username || metadata.email?.split('@')[0] || '',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+                
+                // Insert profile into database
+                const { error: insertError } = await supabaseClient
+                    .from('profiles')
+                    .insert([profileData]);
+                
+                if (insertError) {
+                    console.error('Error creating profile from OAuth data:', insertError);
+                } else {
+                    console.log('Profile created successfully from OAuth data');
+                }
+            }
+            
+            return { data: data.session, error: null };
+        } catch (err) {
+            console.error('Unexpected error in OAuth callback handling:', err);
+            return { data: data.session, error: err };
+        }
+    }
+    
+    return { data: null, error: new Error('No session found after OAuth callback') };
 }

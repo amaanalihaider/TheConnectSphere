@@ -1,0 +1,27 @@
+/* Profile Button Alignment Fix */
+.profile-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 9999px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);
+    /* Add padding-top to align with other nav items */
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+}
+
+.profile-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(124, 58, 237, 0.4);
+}
+
+/* Ensure vertical alignment with other nav elements */
+.profile-dropdown-container {
+    display: flex;
+    align-items: center;
+}

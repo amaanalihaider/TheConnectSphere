@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Swipe Test - ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/notifications-swipe.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+        }
+        .primary-button {
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+        }
+        .primary-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .secondary-button {
+            background-color: #e2e8f0;
+            color: #4a5568;
+        }
+        .secondary-button:hover {
+            background-color: #cbd5e1;
+        }
+        .settings-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="text-3xl font-bold text-purple-600 mb-2">Notification Swipe Test</h1>
+            <p class="text-gray-600">Testing swipe-to-dismiss notifications functionality</p>
+        </div>
+
+        <div class="settings-container">
+            <h2 class="settings-title">Settings</h2>
+            <div class="settings-grid">
+                <div>
+                    <label for="swipe-direction" class="block text-sm font-medium text-gray-700 mb-1">Swipe Direction</label>
+                    <select id="swipe-direction" class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                        <option value="both">Both Directions</option>
+                        <option value="left">Left Only</option>
+                        <option value="right">Right Only</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="swipe-threshold" class="block text-sm font-medium text-gray-700 mb-1">Swipe Threshold (%)</label>
+                    <input type="range" id="swipe-threshold" min="10" max="50" value="30" class="w-full">
+                    <span id="threshold-value" class="text-sm text-gray-500">30%</span>
+                </div>
+                <div>
+                    <label for="animation-speed" class="block text-sm font-medium text-gray-700 mb-1">Animation Speed (ms)</label>
+                    <input type="range" id="animation-speed" min="100" max="500" value="300" class="w-full">
+                    <span id="speed-value" class="text-sm text-gray-500">300ms</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="add-notification" class="button primary-button">
+                <i class="fas fa-plus-circle mr-2"></i>Add Notification
+            </button>
+            <button id="clear-all" class="button secondary-button">
+                <i class="fas fa-trash mr-2"></i>Clear All
+            </button>
+        </div>
+
+        <!-- Notification Panel -->
+        <div class="notification-panel">
+            <div class="notification-panel-header">
+                <div class="notification-panel-title">Notifications</div>
+                <button class="notification-panel-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="notification-panel-body">
+                <div id="notification-list" class="notification-list">
+                    <!-- Notification items will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-purple-600 mb-3">Instructions</h3>
+            <ul class="space-y-2">
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                    <span>Click "Add Notification" to create sample notifications</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                    <span>Swipe notifications left or right to dismiss them</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                    <span>Use settings to customize swipe behavior</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-pink-500 mt-1 mr-2"></i>
+                    <span>Click "Clear All" to remove all notifications</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="js/notifications-swipe.js"></script>
+</body>
+</html>

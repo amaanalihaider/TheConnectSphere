@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relationship Health Dashboard - The ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/relationship-dashboard.css">
+    <link rel="stylesheet" href="css/dropdown-nav.css">
+    <link rel="stylesheet" href="css/profile-button-fix.css">
+    <link rel="stylesheet" href="css/header-fix.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Header -->
+    <header id="header" class="fixed w-full sticky top-0 z-50 transition-all duration-300 bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
+                        <span>The</span> <span>ConnectSphere</span>
+                    </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="md:flex items-center space-x-1 px-4">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    
+                    <!-- Dropdown: Find Match -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Find Match
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="find-yourself-one.html" class="dropdown-item">
+                                <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                            </a>
+                            <a href="find-yourself-one.html#search" class="dropdown-item">
+                                <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                            </a>
+                            <a href="find-yourself-one.html#connections" class="dropdown-item">
+                                <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown: Relationship Tools -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center active">
+                            Relationship 
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="chat-advisor.html" class="dropdown-item">
+                                <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                            </a>
+                            <a href="relationship-dashboard.html" class="dropdown-item">
+                                <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="subscription.html" class="nav-link">Subscription</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="flex items-center space-x-3 ml-4">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="non-auth-links">
+                        <a href="login.html" id="login-btn" class="login-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; color: #7c3aed; font-weight: 500; border: 1px solid #7c3aed; border-radius: 9999px; margin-right: 0.5rem; background-color: white;" onclick="window.location.href='login.html'; return false;"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" id="signup-btn" class="signup-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: white; font-weight: 500; border-radius: 9999px; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Hidden Auth Links -->
+                    <div class="auth-links hidden">
+                        <!-- Notification Bell -->
+                        <div class="notification-bell auth-link mr-4" id="notification-bell">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        
+                        <!-- Dropdown: Profile -->
+                        <div class="relative profile-dropdown-container auth-link" id="profile-dropdown-container">
+                            <button id="profile-btn" class="profile-btn"><i class="fas fa-user-circle mr-2"></i>My Profile</button>
+                            <div id="profile-dropdown" class="profile-dropdown">
+                                <div class="p-3 border-b border-gray-100">
+                                    <p class="font-medium text-gray-800">John Doe</p>
+                                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="my-profile.html" class="dropdown-item">
+                                        <i class="fas fa-user mr-2 text-purple-500"></i>View Profile
+                                    </a>
+                                    <a href="relationship-dashboard.html" class="dropdown-item">
+                                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Health Dashboard
+                                    </a>
+                                    <a href="subscription.html" class="dropdown-item">
+                                        <i class="fas fa-crown mr-2 text-purple-500"></i>Subscription
+                                    </a>
+                                </div>
+                                <div class="p-3 border-t border-gray-100">
+                                    <a href="#" id="logout-btn" class="logout-btn w-full flex justify-center">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="block md:hidden">
+                    <button id="mobile-menu-button" class="mobile-menu-button p-2 rounded-md hover:bg-gray-100">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden py-4">
+                <a href="index.html" class="mobile-link block py-2">Home</a>
+                <a href="#about" class="mobile-link block py-2">About</a>
+                <a href="#features" class="mobile-link block py-2">Features</a>
+                
+                <!-- Mobile Dropdown: Find Match -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button w-full text-left py-2">
+                        Find Match <i class="fas fa-chevron-down float-right mt-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="find-yourself-one.html" class="mobile-dropdown-item">
+                            <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                        </a>
+                        <a href="find-yourself-one.html#search" class="mobile-dropdown-item">
+                            <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                        </a>
+                        <a href="find-yourself-one.html#connections" class="mobile-dropdown-item">
+                            <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Dropdown: Relationship Tools -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button w-full text-left py-2 active">
+                        Relationship <i class="fas fa-chevron-down float-right mt-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="chat-advisor.html" class="mobile-dropdown-item">
+                            <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                        </a>
+                        <a href="relationship-dashboard.html" class="mobile-dropdown-item active">
+                            <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="subscription.html" class="mobile-link block py-2">Subscription</a>
+                <a href="#blog" class="mobile-link block py-2">Blog</a>
+                <a href="#contact" class="mobile-link block py-2">Contact</a>
+                
+                <!-- Mobile Auth Buttons -->
+                <div class="mt-4 non-auth-links">
+                    <a href="login.html" class="mobile-auth-link"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                    <a href="signup.html" class="mobile-signup-link"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                </div>
+                
+                <div class="mt-4 auth-links hidden">
+                    <a href="#" id="mobile-logout-btn" class="mobile-logout-link"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-16">
+        <section class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-10" data-aos="fade-up">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">Relationship Health Dashboard</h1>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Assess the health of your relationship with our interactive dashboard. 
+                        Answer a few questions and get insights into your relationship dynamics.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Dashboard Content -->
+                    <div class="p-6">
+                        <!-- Step 1: Assessment Form -->
+                        <div id="assessment-form" class="transition-all duration-300">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-6">Relationship Assessment</h2>
+                            <p class="text-gray-600 mb-6">
+                                Answer the following questions honestly to get an accurate assessment of your relationship health.
+                                Your responses are private and will only be used to generate your personalized dashboard.
+                            </p>
+
+                            <form id="relationship-form" class="space-y-6">
+                                <!-- Communication Category -->
+                                <div class="bg-purple-50 p-4 rounded-lg">
+                                    <h3 class="text-xl font-semibold text-purple-700 mb-4">Communication</h3>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How often do you have meaningful conversations with your partner?</label>
+                                        <select name="communication_frequency" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Daily</option>
+                                            <option value="4">Several times a week</option>
+                                            <option value="3">Once a week</option>
+                                            <option value="2">A few times a month</option>
+                                            <option value="1">Rarely</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How comfortable are you sharing your feelings with your partner?</label>
+                                        <select name="communication_comfort" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Very comfortable</option>
+                                            <option value="4">Comfortable</option>
+                                            <option value="3">Somewhat comfortable</option>
+                                            <option value="2">Uncomfortable</option>
+                                            <option value="1">Very uncomfortable</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How well do you and your partner resolve conflicts?</label>
+                                        <select name="conflict_resolution" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Very effectively</option>
+                                            <option value="4">Effectively</option>
+                                            <option value="3">Somewhat effectively</option>
+                                            <option value="2">Ineffectively</option>
+                                            <option value="1">Very ineffectively</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Trust Category -->
+                                <div class="bg-indigo-50 p-4 rounded-lg">
+                                    <h3 class="text-xl font-semibold text-indigo-700 mb-4">Trust & Support</h3>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How much do you trust your partner?</label>
+                                        <select name="trust_level" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Complete trust</option>
+                                            <option value="4">High trust</option>
+                                            <option value="3">Moderate trust</option>
+                                            <option value="2">Low trust</option>
+                                            <option value="1">Very little trust</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How supportive is your partner of your goals and dreams?</label>
+                                        <select name="support_level" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Extremely supportive</option>
+                                            <option value="4">Very supportive</option>
+                                            <option value="3">Moderately supportive</option>
+                                            <option value="2">Slightly supportive</option>
+                                            <option value="1">Not supportive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Intimacy Category -->
+                                <div class="bg-pink-50 p-4 rounded-lg">
+                                    <h3 class="text-xl font-semibold text-pink-700 mb-4">Intimacy & Connection</h3>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How satisfied are you with the level of emotional intimacy in your relationship?</label>
+                                        <select name="emotional_intimacy" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Very satisfied</option>
+                                            <option value="4">Satisfied</option>
+                                            <option value="3">Neutral</option>
+                                            <option value="2">Dissatisfied</option>
+                                            <option value="1">Very dissatisfied</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How often do you and your partner engage in activities you both enjoy?</label>
+                                        <select name="shared_activities" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Very frequently</option>
+                                            <option value="4">Frequently</option>
+                                            <option value="3">Occasionally</option>
+                                            <option value="2">Rarely</option>
+                                            <option value="1">Never</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Growth Category -->
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <h3 class="text-xl font-semibold text-green-700 mb-4">Growth & Future</h3>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How aligned are you and your partner on future goals and plans?</label>
+                                        <select name="future_alignment" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Completely aligned</option>
+                                            <option value="4">Mostly aligned</option>
+                                            <option value="3">Somewhat aligned</option>
+                                            <option value="2">Slightly aligned</option>
+                                            <option value="1">Not aligned at all</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">How much do you feel you've grown as a person in this relationship?</label>
+                                        <select name="personal_growth" class="w-full p-2 border border-gray-300 rounded-md">
+                                            <option value="">Select an option</option>
+                                            <option value="5">Significant growth</option>
+                                            <option value="4">Considerable growth</option>
+                                            <option value="3">Some growth</option>
+                                            <option value="2">Little growth</option>
+                                            <option value="1">No growth</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-center">
+                                    <button type="submit" id="calculate-score" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:-translate-y-1 transition duration-300">
+                                        Calculate Relationship Health
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Step 2: Results Dashboard -->
+                        <div id="results-dashboard" class="hidden transition-all duration-300">
+                            <div class="flex flex-col md:flex-row">
+                                <!-- Health Score Visualization -->
+                                <div class="md:w-1/2 p-4 flex flex-col items-center">
+                                    <h3 class="text-2xl font-bold text-purple-700 mb-6">Your Relationship Health Score</h3>
+                                    
+                                    <div class="relative w-64 h-64 mb-6">
+                                        <div class="dashboard-circle">
+                                            <div class="percent">
+                                                <svg>
+                                                    <circle cx="105" cy="105" r="100"></circle>
+                                                    <circle cx="105" cy="105" r="100" id="health-circle"></circle>
+                                                </svg>
+                                                <div class="number">
+                                                    <h2 id="health-score">0<span>%</span></h2>
+                                                    <div class="score-label">Relationship Health</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="health-rating" class="text-xl font-semibold mb-4 text-center"></div>
+                                </div>
+                                
+                                <!-- Category Breakdown -->
+                                <div class="md:w-1/2 p-4">
+                                    <h3 class="text-2xl font-bold text-purple-700 mb-6">Category Breakdown</h3>
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-purple-700 font-medium">Communication</span>
+                                                <span id="communication-score" class="text-gray-700">0%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                <div id="communication-bar" class="bg-purple-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-indigo-700 font-medium">Trust & Support</span>
+                                                <span id="trust-score" class="text-gray-700">0%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                <div id="trust-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-pink-700 font-medium">Intimacy & Connection</span>
+                                                <span id="intimacy-score" class="text-gray-700">0%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                <div id="intimacy-bar" class="bg-pink-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <span class="text-green-700 font-medium">Growth & Future</span>
+                                                <span id="growth-score" class="text-gray-700">0%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                <div id="growth-bar" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Summary and Advice Option -->
+                            <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+                                <h3 class="text-2xl font-bold text-purple-700 mb-4">Relationship Summary</h3>
+                                <p id="relationship-summary" class="text-gray-700 mb-6"></p>
+                                
+                                <div class="text-center mt-8">
+                                    <p class="text-lg mb-4">Would you like personalized advice from our AI relationship advisor?</p>
+                                    <div class="flex justify-center space-x-4">
+                                        <button id="get-advice-btn" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:-translate-y-1 transition duration-300">
+                                            Yes, Get Advice
+                                        </button>
+                                        <button id="restart-assessment-btn" class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-full hover:bg-gray-300 transition duration-300">
+                                            Retake Assessment
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: AI Advice -->
+                        <div id="ai-advice-section" class="hidden transition-all duration-300">
+                            <h2 class="text-2xl font-bold text-purple-700 mb-6">Your Personalized Relationship Advice</h2>
+                            
+                            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                                <div id="ai-advice-content" class="prose max-w-none">
+                                    <div id="ai-typing-indicator" class="flex items-center space-x-2">
+                                        <span class="text-gray-600">ConnectSphere AI is thinking</span>
+                                        <span class="typing-dot"></span>
+                                        <span class="typing-dot"></span>
+                                        <span class="typing-dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-center space-x-4">
+                                <button id="back-to-results-btn" class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-full hover:bg-gray-300 transition duration-300">
+                                    Back to Results
+                                </button>
+                                <button id="chat-advisor-btn" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:-translate-y-1 transition duration-300">
+                                    Continue with Chat Advisor
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-1/4 mb-8 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-4">The ConnectSphere</h3>
+                    <p class="text-gray-400 mb-4">Connecting hearts, one click at a time.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/4 mb-8 md:mb-0">
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="index.html#about" class="text-gray-400 hover:text-white transition">About</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white transition">Features</a></li>
+                        <li><a href="find-yourself-one.html" class="text-gray-400 hover:text-white transition">Find Yourself One</a></li>
+                        <li><a href="chat-advisor.html" class="text-gray-400 hover:text-white transition">Relationship Advisor</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/4 mb-8 md:mb-0">
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Safety Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Community Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/4">
+                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-purple-400"></i>
+                            <span class="text-gray-400">123 Love Street, Romance City</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-purple-400"></i>
+                            <span class="text-gray-400">hello@connectsphere.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-purple-400"></i>
+                            <span class="text-gray-400">+1 (555) 123-4567</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 The ConnectSphere. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    
+    <!-- Auth Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/authNavigation.js"></script>
+    <script src="js/auth-check.js"></script>
+    
+    <!-- Navigation Scripts -->
+    <script src="js/fix-header.js"></script>
+    <script src="js/dropdown-nav.js"></script>
+    
+    <!-- Notification System -->
+    <script src="js/notifications.js"></script>
+    <script src="js/notification-handler.js"></script>
+    <script src="js/notification-drag-new.js"></script>
+    
+    <!-- Profile Dropdown Handler -->
+    <script src="js/profile-dropdown.js"></script>
+    
+    <!-- Page Specific Scripts -->
+    <script src="js/relationship-dashboard.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>

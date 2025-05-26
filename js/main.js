@@ -163,64 +163,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Form Validation
+    // Form Validation and Submission
     const contactForm = document.getElementById('contact-form');
     
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simple validation
-            let valid = true;
-            const name = document.getElementById('name');
-            const email = document.getElementById('email');
-            const subject = document.getElementById('subject');
-            const message = document.getElementById('message');
-            
-            if (!name.value.trim()) {
-                valid = false;
-                name.classList.add('border-red-500');
-            } else {
-                name.classList.remove('border-red-500');
-            }
-            
-            if (!email.value.trim() || !isValidEmail(email.value)) {
-                valid = false;
-                email.classList.add('border-red-500');
-            } else {
-                email.classList.remove('border-red-500');
-            }
-            
-            if (!subject.value.trim()) {
-                valid = false;
-                subject.classList.add('border-red-500');
-            } else {
-                subject.classList.remove('border-red-500');
-            }
-            
-            if (!message.value.trim()) {
-                valid = false;
-                message.classList.add('border-red-500');
-            } else {
-                message.classList.remove('border-red-500');
-            }
-            
-            if (valid) {
-                // In a real application, you would send the form data to a server here
-                alert('Thank you for your message! We will get back to you soon.');
-                contactForm.reset();
-            } else {
-                alert('Please fill in all required fields correctly.');
-            }
-        });
+        // Add success and error message elements
+        const formContainer = contactForm.parentElement;
+        
+        // Create success message element if it doesn't exist
+        // Contact form handling is now in contact-form.js
     }
-
-    // Helper function to validate email
-    function isValidEmail(email) {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-
+    
     // Filter functionality for Find Yourself One page
     if (window.location.pathname.includes('find-yourself-one.html')) {
         // Age range filters

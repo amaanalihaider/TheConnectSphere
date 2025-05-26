@@ -78,12 +78,15 @@ async function checkConnectionExists(supabase, initiatorId, targetId) {
       return { exists: false, data: null, error: 'Connections table does not exist' };
     }
     
-    // Check for connection in either direction (A->B or B->A)
+    // Check for connection in either direction (A->B or B->A) using exact match
     const { data, error } = await supabase
       .from('connections')
       .select('*')
-      .or(`initiator_user_id.eq.${initiatorId},target_user_id.eq.${initiatorId}`)
-      .or(`initiator_user_id.eq.${targetId},target_user_id.eq.${targetId}`);
+      .or(`initiator_user_id.eq.${initiatorId},initiator_user_id.eq.${targetId}`)
+      .or(`target_user_id.eq.${targetId},target_user_id.eq.${initiatorId}`);
+      
+    // Log the query for debugging
+    console.log(`%c[DATABASE] ${timestamp} - Connection query executed with initiator=${initiatorId}, target=${targetId}`, 'color: #2196F3');
     
     if (error) {
       console.error(`%c[DATABASE ERROR] ${timestamp} - Error checking connection:`, 'color: #F44336; font-weight: bold', error);

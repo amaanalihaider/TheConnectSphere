@@ -7,7 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/chatbot-personalization.css">
+    <link rel="stylesheet" href="css/dropdown-nav.css">
+    <link rel="stylesheet" href="css/profile-button-fix.css">
+    <link rel="stylesheet" href="css/header-fix.css">
+    <link rel="stylesheet" href="css/notifications.css">
     <style>
         /* Chat-specific styles */
         .chat-container {
@@ -16,6 +22,85 @@
             border-radius: 1rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             background: white;
+        }
+        
+        /* Confirmation Modal Styles */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .confirm-modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .confirm-modal-heading {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #805ad5;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        
+        .confirm-modal-message {
+            color: #4a5568;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .confirm-modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .confirm-button, .cancel-button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+        }
+        
+        .confirm-button {
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            color: white;
+        }
+        
+        .confirm-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+        }
+        
+        .cancel-button {
+            background-color: #edf2f7;
+            color: #4a5568;
+        }
+        
+        .cancel-button:hover {
+            background-color: #e2e8f0;
         }
         
         .chat-header {
@@ -125,57 +210,182 @@
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-6px); }
         }
+        
+        /* Voice Recording Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .recording {
+            animation: pulse 1.5s infinite;
+            background-color: #ec4899 !important;
+            color: white !important;
+        }
     </style>
 </head>
 <body class="font-sans antialiased text-gray-800 bg-gray-50">
     <!-- Header -->
-    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold text-purple-600">
-                <span class="text-pink-500">The</span> ConnectSphere
-            </a>
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex space-x-6">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="index.html#about" class="nav-link">About</a>
-                <a href="index.html#features" class="nav-link">Features</a>
-                <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
-                <a href="chat-advisor.html" class="nav-link active">Relationship Advisor</a>
-                <a href="index.html#blog" class="nav-link">Blog</a>
-                <a href="index.html#contact" class="nav-link">Contact</a>
-                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300">
-                    <i class="fas fa-user mr-1"></i> My Profile
-                </a>
-                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300">
-                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                </a>
-            </nav>
-            <!-- Mobile Navigation Toggle -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
-            <div class="container mx-auto px-4 py-3">
-                <div class="flex flex-col space-y-3">
+    <header id="header" class="fixed w-full sticky top-0 z-50 transition-all duration-300 bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
+                        <span>The</span> <span>ConnectSphere</span>
+                    </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="md:flex items-center space-x-1 px-4">
                     <a href="index.html" class="nav-link">Home</a>
-                    <a href="index.html#about" class="nav-link">About</a>
-                    <a href="index.html#features" class="nav-link">Features</a>
-                    <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
-                    <a href="chat-advisor.html" class="nav-link active">Relationship Advisor</a>
-                    <a href="index.html#blog" class="nav-link">Blog</a>
-                    <a href="index.html#contact" class="nav-link">Contact</a>
-                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">
-                        <i class="fas fa-user mr-1"></i> My Profile
-                    </a>
-                    <a href="#" id="mobile-logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full text-center hover:bg-gray-600 hover:shadow-lg transition duration-300">
-                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                    </a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    
+                    <!-- Dropdown: Find Match -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Find Match
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="find-yourself-one.html" class="dropdown-item">
+                                <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                            </a>
+                            <a href="find-yourself-one.html#search" class="dropdown-item">
+                                <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                            </a>
+                            <a href="find-yourself-one.html#connections" class="dropdown-item">
+                                <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown: Relationship Tools -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center active">
+                            Relationship 
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="chat-advisor.html" class="dropdown-item">
+                                <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                            </a>
+                            <a href="relationship-dashboard.html" class="dropdown-item">
+                                <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="subscription.html" class="nav-link">Subscription</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="flex items-center space-x-3 ml-4">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="non-auth-links">
+                        <a href="login.html" id="login-btn" class="login-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; color: #7c3aed; font-weight: 500; border: 1px solid #7c3aed; border-radius: 9999px; margin-right: 0.5rem; background-color: white;" onclick="window.location.href='login.html'; return false;"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" id="signup-btn" class="signup-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: white; font-weight: 500; border-radius: 9999px; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Hidden Auth Links -->
+                    <div class="auth-links hidden">
+                        <!-- Notification Bell -->
+                        <div class="notification-bell auth-link mr-4" id="notification-bell">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        
+                        <!-- Dropdown: Profile -->
+                        <div class="relative profile-dropdown-container auth-link" id="profile-dropdown-container">
+                            <button id="profile-btn" class="profile-btn"><i class="fas fa-user-circle mr-2"></i>My Profile</button>
+                            <div id="profile-dropdown" class="profile-dropdown">
+                                <div class="p-3 border-b border-gray-100">
+                                    <p class="font-medium text-gray-800">John Doe</p>
+                                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="my-profile.html" class="dropdown-item">
+                                        <i class="fas fa-user mr-2 text-purple-500"></i>View Profile
+                                    </a>
+                                    <a href="relationship-dashboard.html" class="dropdown-item">
+                                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Health Dashboard
+                                    </a>
+                                    <a href="subscription.html" class="dropdown-item">
+                                        <i class="fas fa-crown mr-2 text-purple-500"></i>Subscription
+                                    </a>
+                                </div>
+                                <div class="p-3 border-t border-gray-100">
+                                    <a href="#" id="logout-btn" class="logout-btn w-full flex justify-center">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="block md:hidden">
+                    <button id="mobile-menu-button" class="mobile-menu-button p-2 rounded-md hover:bg-gray-100">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden py-4">
+                <a href="index.html" class="mobile-link block py-2">Home</a>
+                <a href="#about" class="mobile-link block py-2">About</a>
+                <a href="#features" class="mobile-link block py-2">Features</a>
+                
+                <!-- Mobile Dropdown: Find Match -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button w-full text-left py-2">
+                        Find Match <i class="fas fa-chevron-down float-right mt-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="find-yourself-one.html" class="mobile-dropdown-item">
+                            <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                        </a>
+                        <a href="find-yourself-one.html#search" class="mobile-dropdown-item">
+                            <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                        </a>
+                        <a href="find-yourself-one.html#connections" class="mobile-dropdown-item">
+                            <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Dropdown: Relationship Tools -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button w-full text-left py-2 active">
+                        Relationship <i class="fas fa-chevron-down float-right mt-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="chat-advisor.html" class="mobile-dropdown-item active">
+                            <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                        </a>
+                        <a href="relationship-dashboard.html" class="mobile-dropdown-item">
+                            <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="subscription.html" class="mobile-link block py-2">Subscription</a>
+                <a href="#blog" class="mobile-link block py-2">Blog</a>
+                <a href="#contact" class="mobile-link block py-2">Contact</a>
+                
+                <!-- Mobile Auth Buttons -->
+                <div class="mt-4 non-auth-links">
+                    <a href="login.html" class="mobile-auth-link"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                    <a href="signup.html" class="mobile-signup-link"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                </div>
+                
+                <div class="mt-4 auth-links hidden">
+                    <a href="#" id="mobile-logout-btn" class="mobile-logout-link"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
                 </div>
             </div>
         </div>
@@ -204,14 +414,30 @@
                             </div>
                         </div>
                         <div class="flex items-center">
-                            <!-- AI Provider Toggle -->
+                            <!-- AI Persona Selector -->
+                            <div class="mr-4 flex items-center">
+                                <span class="text-xs mr-2">AI Role:</span>
+                                <select id="ai-persona-selector" class="bg-white bg-opacity-20 text-white text-sm rounded-md px-2 py-1 border-none focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+                                    <option value="default">Relationship Advisor</option>
+                                    <option value="emotional-coach">Emotional Coach</option>
+                                    <option value="relationship-therapist">Relationship Therapist</option>
+                                    <option value="friendly-supporter">Friendly Supporter</option>
+                                    <option value="tough-love">Tough-Love Advisor</option>
+                                    <option value="reflective-listener">Reflective Listener</option>
+                                    <option value="dating-strategist">Dating Strategist</option>
+                                </select>
+                            </div>
+                            <!-- AI Provider -->
                             <div class="mr-4 flex items-center">
                                 <span class="text-xs mr-2">AI Provider:</span>
                                 <div class="bg-white bg-opacity-20 text-white text-sm rounded-md px-2 py-1">
                                     Gemini AI
                                 </div>
                             </div>
-                            <button id="clear-chat" class="text-white hover:text-gray-200 transition">
+                            <button id="export-chat" class="text-white hover:text-gray-200 transition mr-3" title="Export Chat History">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button id="clear-chat" class="text-white hover:text-gray-200 transition" title="Clear Chat History">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -229,20 +455,148 @@
                         </div>
                     </div>
                     
-                    <!-- Chat Input -->
-                    <div class="chat-input bg-gray-100 p-4 flex items-center">
-                        <input 
-                            type="text" 
-                            id="message-input" 
-                            class="flex-1 border border-gray-300 rounded-l-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500" 
-                            placeholder="Type your message here..."
-                        >
-                        <button 
-                            id="send-button" 
-                            class="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-r-full px-6 py-2 hover:opacity-90 transition"
-                        >
-                            <i class="fas fa-paper-plane"></i>
+                    <!-- Personalization Panel -->
+                    <div class="personalization-container border-t border-gray-200 bg-gray-50">
+                        <button id="personalization-toggle" class="w-full py-2 px-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium text-sm rounded-b-lg hover:opacity-90 transition flex items-center justify-center">
+                            Personalize AI <i class="fas fa-sliders-h ml-2"></i>
                         </button>
+                        
+                        <div id="personalization-panel" class="overflow-hidden transition-all duration-300" style="max-height: 0;">
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold text-purple-700 mb-3">Customize Your Advice</h3>
+                                <p class="text-sm text-gray-600 mb-4">Personalize the AI to get more relevant relationship advice by providing details about the person you're interested in.</p>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <!-- Profile Selector -->
+                                    <div class="col-span-1 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Saved Profiles</label>
+                                        <div class="flex gap-2">
+                                            <select id="saved-profiles" class="flex-grow p-2 border border-gray-300 rounded-md text-sm">
+                                                <option value="new">-- New Profile --</option>
+                                            </select>
+                                            <input id="profile-name" type="text" placeholder="Profile name" class="flex-grow p-2 border border-gray-300 rounded-md text-sm">
+                                            <button id="save-profile" class="bg-purple-600 text-white p-2 rounded-md hover:bg-purple-700 transition">
+                                                <i class="fas fa-save"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Target Person Details -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                                        <select id="target-age" class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="">Select age</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                                        <select id="target-gender" class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="">Select gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="non-binary">Non-binary</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Education</label>
+                                        <select id="target-education" class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="">Select education</option>
+                                            <option value="high-school">High School</option>
+                                            <option value="some-college">Some College</option>
+                                            <option value="bachelors">Bachelor's Degree</option>
+                                            <option value="masters">Master's Degree</option>
+                                            <option value="doctorate">Doctorate</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Relationship Goal</label>
+                                        <select id="relationship-goal" class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="">Select goal</option>
+                                            <option value="casual-dating">Casual Dating</option>
+                                            <option value="serious-relationship">Serious Relationship</option>
+                                            <option value="marriage">Marriage</option>
+                                            <option value="friendship">Friendship First</option>
+                                            <option value="improve-current">Improve Current Relationship</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-span-1 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Values</label>
+                                        <select id="values-select" multiple class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <!-- Options added by JS -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-span-1 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Interests</label>
+                                        <select id="interests-select" multiple class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <!-- Options added by JS -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-span-1 md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Communication Style</label>
+                                        <select id="communication-style" class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="">Select style</option>
+                                            <option value="direct">Direct and Straightforward</option>
+                                            <option value="gentle">Gentle and Supportive</option>
+                                            <option value="detailed">Detailed and Analytical</option>
+                                            <option value="practical">Practical and Solution-Focused</option>
+                                            <option value="emotional">Emotional and Empathetic</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-2">
+                                    <button id="reset-personalization" class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition">
+                                        Reset
+                                    </button>
+                                    <button id="save-personalization" class="px-4 py-2 text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:opacity-90 transition">
+                                        Apply Settings
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="chat-input-container bg-gray-100 p-4 border-t border-gray-200">
+                        <!-- Subscription Limit Warning -->
+                        <div id="upgrade-message" class="hidden mb-4"></div>
+                        
+                        <form id="chat-form" class="flex" onsubmit="return false;">
+                            <input 
+                                id="prompt-input" 
+                                type="text" 
+                                placeholder="Ask for relationship advice..." 
+                                class="flex-grow px-4 py-2 rounded-l-lg border-2 border-purple-300 focus:outline-none focus:border-purple-500"
+                                required
+                                autocomplete="off"
+                            >
+                            <button 
+                                id="send-button" 
+                                type="submit" 
+                                class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-r-lg hover:opacity-90 transition duration-300 flex items-center justify-center"
+                            >
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                        
+                        <!-- Usage Counter -->
+                        <div class="text-sm text-gray-600 mt-2 flex justify-between items-center">
+                            <span>
+                                <i class="fas fa-info-circle mr-1"></i> 
+                                <span id="usage-counter">0/3</span> prompts used today
+                            </span>
+                            <a href="subscription.html" class="text-purple-600 hover:text-purple-800 text-sm">
+                                <i class="fas fa-arrow-up mr-1"></i> Upgrade for more
+                            </a>
+                        </div>
                     </div>
                 </div>
                 
@@ -327,26 +681,69 @@
         </div>
     </footer>
 
+    <!-- Confirmation Modal -->
+    <div id="confirm-clear-modal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <h3 class="confirm-modal-heading">Clear Chat History</h3>
+            <p class="confirm-modal-message">Are you sure you want to clear your chat history with AI Advisor? This action cannot be undone.</p>
+            <div class="confirm-modal-buttons">
+                <button id="cancel-clear" class="cancel-button">Cancel</button>
+                <button id="confirm-clear" class="confirm-button">Yes, Clear Chat</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="js/main.js"></script>
+    
+    <!-- Supabase and Authentication Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/authNavigation.js"></script>
+    <script src="js/auth-check.js"></script>
+    
+    <!-- Navigation Scripts -->
+    <script src="js/fix-header.js"></script>
+    <script src="js/dropdown-nav.js"></script>
+    
+    <!-- Notification System -->
+    <script src="js/notifications.js"></script>
+    <script src="js/notification-handler.js"></script>
+    <script src="js/notification-drag-new.js"></script>
+    
+    <!-- Profile Dropdown Handler -->
+    <script src="js/profile-dropdown.js"></script>
+    
+    <!-- Subscription Validation Scripts -->
+    <script src="js/subscription-validator.js"></script>
+    <script src="js/chat-subscription.js"></script>
+    
+    <!-- Chatbot Personalization Script -->
+    <script src="js/chatbot-personalization.js"></script>
+    
+    <!-- Chatbot Script -->
+    <script src="js/chatbot.js"></script>
+    
     <script>
-        // Simple authentication check - for demo purposes only
-        // In a real app, this would verify against a database
-        function checkUserLoggedIn() {
-            return localStorage.getItem('userLoggedIn') === 'true';
-        }
-        
-        // Get user data from localStorage - for demo purposes only
-        function getUserData() {
-            const userData = localStorage.getItem('userData');
-            return userData ? JSON.parse(userData) : null;
-        }
-        
+        AOS.init();
+    </script>
+    <script>
         // Make auth functions available to chatbot.js
         window.auth = {
-            checkUserLoggedIn,
-            getUserData
+            checkUserLoggedIn: function() {
+                return supabaseClient.auth.getUser().then(({ data }) => {
+                    return !!data.user;
+                });
+            },
+            getUserData: function() {
+                return supabaseClient.auth.getUser().then(({ data }) => {
+                    return data.user;
+                });
+            }
         };
     </script>
     <script src="js/chatbot.js"></script>

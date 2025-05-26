@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Navigation - The ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Minimal Navigation Bar -->
+    <header class="fixed w-full bg-white shadow-sm z-50 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold">
+                        <span class="text-pink-500">The</span> <span class="text-purple-600">ConnectSphere</span>
+                    </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
+                    <a href="chat-advisor.html" class="nav-link">Relationship Advisor</a>
+                    <a href="relationship-dashboard.html" class="nav-link">Health Dashboard</a>
+                    <a href="subscription.html" class="nav-link">Subscription</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="non-auth-links">
+                        <a href="login.html" class="login-btn">Sign In</a>
+                        <a href="signup.html" class="signup-btn">Join Now</a>
+                    </div>
+                    
+                    <!-- Auth Links (shown when logged in) -->
+                    <div class="auth-links hidden">
+                        <a href="find-yourself-one.html" class="find-one-btn">Find Yourself One</a>
+                        <div class="relative inline-block profile-dropdown-container">
+                            <button class="profile-btn">
+                                <i class="fas fa-user mr-1"></i> My Profile <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="profile-dropdown hidden">
+                                <a href="my-profile.html" class="dropdown-item">
+                                    <i class="fas fa-user-circle mr-2"></i> My Profile
+                                </a>
+                                <a href="relationship-dashboard.html" class="dropdown-item">
+                                    <i class="fas fa-chart-pie mr-2"></i> Health Dashboard
+                                </a>
+                                <a href="subscription.html" class="dropdown-item">
+                                    <i class="fas fa-crown mr-2"></i> Subscription
+                                </a>
+                            </div>
+                        </div>
+                        <a href="#" class="logout-btn">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-button">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu hidden md:hidden py-2">
+                <a href="#home" class="mobile-link active">Home</a>
+                <a href="#about" class="mobile-link">About</a>
+                <a href="#features" class="mobile-link">Features</a>
+                <a href="find-yourself-one.html" class="mobile-link">Find Yourself One</a>
+                <a href="chat-advisor.html" class="mobile-link">Relationship Advisor</a>
+                <a href="relationship-dashboard.html" class="mobile-link">Health Dashboard</a>
+                <a href="subscription.html" class="mobile-link">Subscription</a>
+                <a href="#blog" class="mobile-link">Blog</a>
+                <a href="#contact" class="mobile-link">Contact</a>
+                
+                <!-- Mobile Auth Links -->
+                <div class="pt-4 border-t border-gray-200 mt-2">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="mobile-non-auth-links">
+                        <a href="login.html" class="mobile-auth-link">Sign In</a>
+                        <a href="signup.html" class="mobile-signup-link">Join Now</a>
+                    </div>
+                    
+                    <!-- Auth Links (shown when logged in) -->
+                    <div class="mobile-auth-links hidden">
+                        <a href="find-yourself-one.html" class="mobile-find-one-link">Find Yourself One</a>
+                        <div class="mobile-profile-section">
+                            <button class="mobile-profile-btn">
+                                <i class="fas fa-user mr-1"></i> My Profile <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="mobile-profile-dropdown hidden">
+                                <a href="my-profile.html" class="mobile-dropdown-item">
+                                    <i class="fas fa-user-circle mr-2"></i> My Profile
+                                </a>
+                                <a href="relationship-dashboard.html" class="mobile-dropdown-item">
+                                    <i class="fas fa-chart-pie mr-2"></i> Health Dashboard
+                                </a>
+                                <a href="subscription.html" class="mobile-dropdown-item">
+                                    <i class="fas fa-crown mr-2"></i> Subscription
+                                </a>
+                            </div>
+                        </div>
+                        <a href="#" class="mobile-logout-link">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Content for Demo -->
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-center mb-8">Minimal Navigation Design</h1>
+            <p class="text-center mb-8">A clean, minimal navigation bar with essential links only.</p>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Key Features:</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>Clean, minimal design with reduced visual clutter</li>
+                    <li>Focused on essential navigation items only</li>
+                    <li>Subtle animations for interactive elements</li>
+                    <li>Fully responsive with mobile-friendly dropdown</li>
+                    <li>Lightweight CSS with minimal custom styling</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Simple JavaScript for Mobile Menu Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

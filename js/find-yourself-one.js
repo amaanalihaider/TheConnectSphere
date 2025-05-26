@@ -1,22 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Find Yourself One Page - Search & Filter Functionality Initialized');
     
-    // Initialize the Supabase client
-    const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    // Use the Supabase client from supabaseClient.js
+    // This prevents duplicate declarations of supabaseUrl and supabaseKey
     
     // Store all profiles to enable client-side filtering
     let allProfiles = [];
     
     // Current filter state
-    let filterState = {
+    window.filterState = {
         searchTerm: '',
         ageRanges: [],
         city: '',
         interests: [],
         relationshipTypes: []
     };
+    
+    // Make filterState accessible globally
+    window.allProfiles = allProfiles;
     
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
             : 'Not specified';
         
         return `
-            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105" data-aos="fade-up">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105 profile-card" data-aos="fade-up">
                 <div class="relative">
                     <img src="${getRandomImage()}" alt="${profile.first_name}'s profile" class="w-full h-60 object-cover">
                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
@@ -277,6 +278,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (error.code === '23505' && error.message.includes('duplicate key value')) {
                                 console.log(`%c[CONNECTION WARNING] ${timestamp} - Duplicate connection caught by database constraint`, 'color: #FF9800; font-weight: bold');
                                 
+                                // Show a more informative message to the user
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Already Connected',
+                                    text: 'You have already sent a connection request to this user.',
+                                    confirmButtonColor: '#8b5cf6'
+                                });
+                                
+                                // Force refresh of connection count to ensure UI is up-to-date
+                                if (validator && typeof validator.refreshConnectionData === 'function') {
+                                    console.log(`%c[CONNECTION] ${timestamp} - Refreshing connection count after duplicate detection`, 'color: #2196F3');
+                                    await validator.refreshConnectionData();
+                                    await updateConnectionBanner(validator);
+                                }
+                                
+                                // No need to clean up or retry - the connection already exists
+                                return;
+                                
+                                // The following code is kept for reference but will not execute
                                 // Use our utility function to clean up conflicting connections
                                 try {
                                     console.log(`%c[CONNECTION] ${timestamp} - Attempting to clean up conflicting connections`, 'color: #2196F3');
@@ -340,6 +360,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 confirmButtonColor: '#8B5CF6',
                                             });
                                             
+                                            // Force refresh of connection count immediately
+                                            if (validator && typeof validator.refreshConnectionData === 'function') {
+                                                console.log(`%c[CONNECTION] ${timestamp} - Refreshing connection count after successful connection`, 'color: #2196F3');
+                                                await validator.refreshConnectionData();
+                                            }
+                                            
                                             // Update the connection banner
                                             await updateConnectionBanner(validator);
                                             return;
@@ -386,6 +412,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         }
                         
+                        // Force refresh of connection count immediately
+                        if (validator && typeof validator.refreshConnectionData === 'function') {
+                            console.log(`%c[CONNECTION] ${timestamp} - Refreshing connection count after successful connection`, 'color: #2196F3');
+                            await validator.refreshConnectionData();
+                            await updateConnectionBanner(validator);
+                        }
+                        
                         // Show success message
                         Swal.fire({
                             title: 'Connection Sent!',
@@ -423,8 +456,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!subscriptionBanner || !connectionCount) return;
         
         try {
-            // Get the connection status
+            // Force refresh of connection data from the database
+            if (validator && typeof validator.refreshConnectionData === 'function') {
+                await validator.refreshConnectionData();
+            }
+            
+            // Get the connection status with fresh data
             const connectionStatus = await validator.canCreateConnection();
+            console.log('Updated connection status:', connectionStatus);
             
             // Show the banner
             subscriptionBanner.classList.remove('hidden');
@@ -435,8 +474,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // If user is at or near their limit, highlight this
             if (connectionStatus.currentCount >= connectionStatus.maxCount) {
                 connectionCount.classList.add('text-red-600', 'font-bold');
+                connectionCount.classList.remove('text-yellow-600');
             } else if (connectionStatus.currentCount >= connectionStatus.maxCount * 0.8) {
                 connectionCount.classList.add('text-yellow-600', 'font-bold');
+                connectionCount.classList.remove('text-red-600');
             } else {
                 connectionCount.classList.remove('text-red-600', 'text-yellow-600', 'font-bold');
             }
@@ -446,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Apply filters to profiles
-    function applyFilters() {
+    window.applyFilters = function() {
         console.log('Applying filters with state:', filterState);
         
         // If we don't have profiles, don't do anything
@@ -455,97 +496,111 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Filter profiles based on current filter state
-        const filteredProfiles = allProfiles.filter(profile => {
-            // Search term filter (name, city, interests, bio)
-            if (filterState.searchTerm) {
-                const searchTerm = filterState.searchTerm.toLowerCase();
-                const firstName = (profile.first_name || '').toLowerCase();
-                const lastName = (profile.last_name || '').toLowerCase();
-                const city = (profile.city || '').toLowerCase();
-                const bio = (profile.bio || '').toLowerCase();
-                
-                // Check interests array
-                let interestsMatch = false;
-                if (profile.interests && profile.interests.length > 0) {
-                    interestsMatch = profile.interests.some(interest => 
-                        interest.toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                if (!firstName.includes(searchTerm) && 
-                    !lastName.includes(searchTerm) && 
-                    !city.includes(searchTerm) && 
-                    !bio.includes(searchTerm) && 
-                    !interestsMatch) {
-                    return false;
-                }
-            }
-            
-            // City filter
-            if (filterState.city && profile.city !== filterState.city) {
-                return false;
-            }
-            
-            // Age range filter
-            if (filterState.ageRanges.length > 0) {
-                const age = calculateAge(profile.birthdate);
-                if (typeof age === 'number') {
-                    let ageMatches = false;
+        try {
+            // Filter profiles based on current filter state
+            const filteredProfiles = allProfiles.filter(profile => {
+                // Search term filter (name, city, interests, bio)
+                if (filterState.searchTerm && filterState.searchTerm.length > 0) {
+                    const searchTerm = filterState.searchTerm.toLowerCase();
+                    const firstName = (profile.first_name || '').toLowerCase();
+                    const lastName = (profile.last_name || '').toLowerCase();
+                    const city = (profile.city || '').toLowerCase();
+                    const bio = (profile.bio || '').toLowerCase();
                     
-                    for (const range of filterState.ageRanges) {
-                        if (range === '20-30' && age >= 20 && age <= 30) {
-                            ageMatches = true;
-                            break;
-                        } else if (range === '30-40' && age >= 30 && age <= 40) {
-                            ageMatches = true;
-                            break;
-                        } else if (range === '40+' && age >= 40) {
-                            ageMatches = true;
+                    // Check interests array
+                    let interestsMatch = false;
+                    if (profile.interests && profile.interests.length > 0) {
+                        interestsMatch = profile.interests.some(interest => 
+                            interest.toLowerCase().includes(searchTerm)
+                        );
+                    }
+                    
+                    if (!firstName.includes(searchTerm) && 
+                        !lastName.includes(searchTerm) && 
+                        !city.includes(searchTerm) && 
+                        !bio.includes(searchTerm) && 
+                        !interestsMatch) {
+                        return false;
+                    }
+                }
+                
+                // City filter
+                if (filterState.city && filterState.city.length > 0) {
+                    if (!profile.city || profile.city !== filterState.city) {
+                        return false;
+                    }
+                }
+                
+                // Age range filter
+                if (filterState.ageRanges && filterState.ageRanges.length > 0) {
+                    const age = calculateAge(profile.birthdate);
+                    if (typeof age === 'number') {
+                        let ageMatches = false;
+                        
+                        for (const range of filterState.ageRanges) {
+                            if (range === '20-30' && age >= 20 && age <= 30) {
+                                ageMatches = true;
+                                break;
+                            } else if (range === '30-40' && age >= 30 && age <= 40) {
+                                ageMatches = true;
+                                break;
+                            } else if (range === '40+' && age >= 40) {
+                                ageMatches = true;
+                                break;
+                            }
+                        }
+                        
+                        if (!ageMatches) return false;
+                    }
+                }
+                
+                // Interests filter
+                if (filterState.interests && filterState.interests.length > 0) {
+                    if (!profile.interests || profile.interests.length === 0) {
+                        return false;
+                    }
+                    
+                    let hasInterest = false;
+                    for (const interest of filterState.interests) {
+                        if (profile.interests.includes(interest)) {
+                            hasInterest = true;
                             break;
                         }
                     }
                     
-                    if (!ageMatches) return false;
+                    if (!hasInterest) return false;
                 }
-            }
-            
-            // Interests filter
-            if (filterState.interests.length > 0 && profile.interests) {
-                let hasInterest = false;
                 
-                for (const interest of filterState.interests) {
-                    if (profile.interests.includes(interest)) {
-                        hasInterest = true;
-                        break;
+                // Relationship type filter
+                if (filterState.relationshipTypes && filterState.relationshipTypes.length > 0) {
+                    if (!profile.relationship_types || profile.relationship_types.length === 0) {
+                        return false;
                     }
-                }
-                
-                if (!hasInterest) return false;
-            }
-            
-            // Relationship type filter
-            if (filterState.relationshipTypes.length > 0 && profile.relationship_types) {
-                let hasRelationshipType = false;
-                
-                for (const type of filterState.relationshipTypes) {
-                    if (profile.relationship_types.includes(type)) {
-                        hasRelationshipType = true;
-                        break;
+                    
+                    let hasRelationshipType = false;
+                    for (const type of filterState.relationshipTypes) {
+                        if (profile.relationship_types.includes(type)) {
+                            hasRelationshipType = true;
+                            break;
+                        }
                     }
+                    
+                    if (!hasRelationshipType) return false;
                 }
                 
-                if (!hasRelationshipType) return false;
-            }
+                // If all filters pass, include this profile
+                return true;
+            });
             
-            // If all filters pass, include this profile
-            return true;
-        });
-        
-        console.log(`Filtered from ${allProfiles.length} to ${filteredProfiles.length} profiles`);
-        
-        // Display the filtered profiles
-        displayProfiles(filteredProfiles);
+            console.log(`Filtered from ${allProfiles.length} to ${filteredProfiles.length} profiles`);
+            
+            // Display the filtered profiles
+            displayProfiles(filteredProfiles);
+        } catch (error) {
+            console.error('Error applying filters:', error);
+            // Display all profiles as fallback
+            displayProfiles(allProfiles);
+        }
     }
     
     // Display profiles in the grid
@@ -787,6 +842,35 @@ document.addEventListener('DOMContentLoaded', function() {
             clearFiltersButton: !!clearFiltersButton
         });
         
+        // Debug check - if any elements are missing, log a warning
+        if (!searchInput) console.warn('Search input element not found!');
+        if (!searchButton) console.warn('Search button element not found!');
+        if (!searchForm) console.warn('Search form element not found!');
+        if (!cityFilter) console.warn('City filter element not found!');
+        
+        // Direct DOM manipulation to ensure search functionality works
+        document.addEventListener('DOMContentLoaded', function() {
+            // Re-get elements to ensure they're available
+            const searchInput = document.getElementById('profile-search');
+            const searchButton = document.getElementById('search-btn');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    filterState.searchTerm = this.value.trim();
+                    applyFilters();
+                });
+            }
+            
+            if (searchButton) {
+                searchButton.addEventListener('click', function() {
+                    if (searchInput) {
+                        filterState.searchTerm = searchInput.value.trim();
+                        applyFilters();
+                    }
+                });
+            }
+        });
+        
         // Age range checkboxes
         const age2030Checkbox = document.getElementById('age-20-30');
         const age3040Checkbox = document.getElementById('age-30-40');
@@ -823,22 +907,43 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Search input event
         if (searchInput) {
+            // Add both input and keyup events to catch all input methods
             searchInput.addEventListener('input', function() {
                 filterState.searchTerm = this.value.trim().toLowerCase();
                 console.log('Search input changed to:', filterState.searchTerm);
                 applyFilters();
             });
+            
+            // Add keyup event with Enter key detection for better user experience
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filterState.searchTerm = this.value.trim().toLowerCase();
+                    console.log('Search input submitted with Enter key:', filterState.searchTerm);
+                    applyFilters();
+                }
+            });
+            
+            console.log('Search input event listeners attached');
+        } else {
+            console.error('Failed to attach search input event listeners - element not found');
         }
         
         // Search button click
         if (searchButton) {
-            searchButton.addEventListener('click', function() {
+            searchButton.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent any default form submission
                 if (searchInput) {
                     filterState.searchTerm = searchInput.value.trim().toLowerCase();
                     console.log('Search button clicked with term:', filterState.searchTerm);
                     applyFilters();
+                } else {
+                    console.error('Search input not found when search button was clicked');
                 }
             });
+            console.log('Search button event listener attached');
+        } else {
+            console.error('Failed to attach search button event listener - element not found');
         }
         
         // City filter change
@@ -848,6 +953,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('City filter changed to:', filterState.city);
                 applyFilters();
             });
+            console.log('City filter event listener attached');
+        } else {
+            console.error('Failed to attach city filter event listener - element not found');
         }
         
         // Age range checkboxes
@@ -858,9 +966,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ].forEach(item => {
             if (item.el) {
                 item.el.addEventListener('change', function() {
+                    console.log(`Age checkbox changed: ${item.value} is now ${this.checked ? 'checked' : 'unchecked'}`);
                     updateAgeRangeFilters();
                     applyFilters();
                 });
+                console.log(`Age range checkbox listener attached for ${item.value}`);
+            } else {
+                console.warn(`Age range checkbox for ${item.value} not found`);
             }
         });
         
@@ -869,9 +981,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkbox = document.getElementById(item.id);
             if (checkbox) {
                 checkbox.addEventListener('change', function() {
+                    console.log(`Interest checkbox changed: ${item.value} is now ${this.checked ? 'checked' : 'unchecked'}`);
                     updateInterestFilters();
                     applyFilters();
                 });
+                console.log(`Interest checkbox listener attached for ${item.value}`);
+            } else {
+                console.warn(`Interest checkbox for ${item.value} not found with ID: ${item.id}`);
             }
         });
         
@@ -895,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Helper function to update age range filters
-        function updateAgeRangeFilters() {
+        window.updateAgeRangeFilters = function() {
             filterState.ageRanges = [];
             
             if (age2030Checkbox && age2030Checkbox.checked) {
@@ -917,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Helper function to update interest filters
-        function updateInterestFilters() {
+        window.updateInterestFilters = function() {
             filterState.interests = [];
             
             interestCheckboxes.forEach(item => {

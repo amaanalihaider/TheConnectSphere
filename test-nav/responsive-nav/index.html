@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navigation - ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Responsive Navigation Bar -->
+    <header class="fixed w-full bg-white shadow-sm z-50 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-purple-600 font-bold text-xl">
+                        ConnectSphere
+                    </a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex items-center space-x-1">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-search mr-1"></i> Find Match
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-comment mr-1"></i> Chat
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-crown mr-1"></i> Subscription
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-user mr-1"></i> Profile
+                    </a>
+                </div>
+                
+                <!-- Tablet Navigation - Icons Only -->
+                <div class="hidden md:flex lg:hidden items-center space-x-1">
+                    <a href="#" class="nav-icon active" data-tooltip="Home">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="#" class="nav-icon" data-tooltip="Find Match">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <a href="#" class="nav-icon" data-tooltip="Chat">
+                        <i class="fas fa-comment"></i>
+                    </a>
+                    <a href="#" class="nav-icon" data-tooltip="Subscription">
+                        <i class="fas fa-crown"></i>
+                    </a>
+                    <a href="#" class="nav-icon" data-tooltip="Profile">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+                
+                <!-- Auth Buttons - Desktop & Tablet -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <a href="#" class="login-btn">Login</a>
+                    <a href="#" class="signup-btn">Sign Up</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-button">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu hidden md:hidden">
+                <div class="mobile-menu-container">
+                    <a href="#" class="mobile-link active">
+                        <i class="fas fa-home mr-2"></i> Home
+                    </a>
+                    <a href="#" class="mobile-link">
+                        <i class="fas fa-search mr-2"></i> Find Match
+                    </a>
+                    <a href="#" class="mobile-link">
+                        <i class="fas fa-comment mr-2"></i> Chat
+                    </a>
+                    <a href="#" class="mobile-link">
+                        <i class="fas fa-crown mr-2"></i> Subscription
+                    </a>
+                    <a href="#" class="mobile-link">
+                        <i class="fas fa-user mr-2"></i> Profile
+                    </a>
+                    
+                    <div class="mobile-auth">
+                        <a href="#" class="mobile-login">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Login
+                        </a>
+                        <a href="#" class="mobile-signup">
+                            <i class="fas fa-user-plus mr-2"></i> Sign Up
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Content for Demo -->
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-center mb-8">Responsive Navigation Design</h1>
+            <p class="text-center mb-8">A navigation that adapts to different screen sizes with optimal layouts for each.</p>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Key Features:</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>Desktop: Full text navigation with icons</li>
+                    <li>Tablet: Icon-only navigation with tooltips</li>
+                    <li>Mobile: Full-screen slide-in menu</li>
+                    <li>Consistent visual language across breakpoints</li>
+                    <li>Smooth transitions between different layouts</li>
+                </ul>
+            </div>
+            
+            <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="text-lg font-semibold text-blue-700 mb-2">Try It Out:</h3>
+                <p>Resize your browser window to see how the navigation adapts to different screen sizes:</p>
+                <ul class="list-disc pl-6 mt-2 space-y-1 text-blue-600">
+                    <li>Desktop (large screens): Full text navigation</li>
+                    <li>Tablet (medium screens): Icon-only navigation</li>
+                    <li>Mobile (small screens): Hamburger menu</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+                
+                if (!mobileMenu.classList.contains('hidden')) {
+                    // Add slide-in animation class
+                    mobileMenu.classList.add('slide-in');
+                } else {
+                    // Remove slide-in animation class
+                    mobileMenu.classList.remove('slide-in');
+                }
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768 && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

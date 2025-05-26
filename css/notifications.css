@@ -114,15 +114,23 @@
 }
 
 .notification-bell.has-unread::after {
-  content: '';
+  content: attr(data-count);
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 10px;
-  height: 10px;
-  background-color: #ef4444; /* Red dot for unread */
-  border-radius: 50%;
-  border: 2px solid #3b82f6;
+  top: 5px;
+  right: 5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 2px;
+  background-color: #ef4444; /* Red background for unread count */
+  color: white;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Notification Panel Styles */
@@ -135,7 +143,7 @@
   background-color: #ffffff; /* Clean white background */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(128, 90, 213, 0.1);
   z-index: 1001;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Elastic bounce effect */
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.3s ease; /* Added height transition */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -232,6 +240,8 @@
   position: relative;
   z-index: 1;
   background-image: linear-gradient(to bottom, rgba(249, 250, 251, 0.8), rgba(249, 250, 251, 1));
+  transition: height 0.3s ease, max-height 0.3s ease; /* Smooth transition for height changes */
+  will-change: height; /* Optimize for height animations */
 }
 
 /* Notification list container */
@@ -242,6 +252,8 @@
   padding: 12px;
   background-color: transparent;
   position: relative;
+  transition: height 0.3s ease, max-height 0.3s ease; /* Smooth transition for height changes */
+  will-change: height, max-height; /* Optimize for height animations */
 }
 
 .notification-panel-body::-webkit-scrollbar {
@@ -257,12 +269,12 @@
   border-radius: 6px;
 }
 
-/* Styling for notification items */
+/* Styling for notification items with drag support */
 .notification-item {
   padding: 16px 20px;
   border-radius: 12px;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: grab;
   animation: slideIn 0.4s ease-out forwards;
   opacity: 0;
   transform: translateX(20px);
@@ -272,9 +284,68 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 0;
+  margin: 0 0 8px 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(226, 232, 240, 0.8);
+  touch-action: none; /* Disable default touch actions for better drag control */
+  user-select: none; /* Prevent text selection during drag */
+  will-change: transform, opacity, left, top; /* Optimize for animation performance */
+}
+
+/* Active dragging state */
+.notification-item.dragging {
+  cursor: grabbing;
+  z-index: 10000; /* Much higher z-index to ensure it's above everything */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: none; /* Disable transitions during active dragging for smoother movement */
+  pointer-events: none; /* Allows the element to be dragged over other elements */
+}
+
+/* Swipe indicators */
+.notification-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Left swipe indicator (delete) */
+.notification-item.swipe-left::before {
+  right: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2'/%3E%3Cpath d='M10 11v6M14 11v6'/%3E%3C/svg%3E");
+  opacity: 0.8;
+}
+
+/* Right swipe indicator (archive) */
+.notification-item.swipe-right::before {
+  left: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  opacity: 0.8;
+}
+
+/* Animation for removing notifications */
+.notification-item.removing {
+  transition: all 0.3s ease;
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* Define animation speed CSS variable */
+:root {
+  --animation-speed: 300ms;
 }
 
 /* Animation delay for each item */

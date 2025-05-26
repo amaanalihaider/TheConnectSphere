@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Yourself One - The ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/header-fix.css">
+    <link rel="stylesheet" href="css/like-button.css">
+    <!-- Supabase JS Library - UMD version for direct browser usage -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Header -->
+    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-purple-600">
+                <span class="text-pink-500">The</span> ConnectSphere
+            </a>
+            <!-- Desktop Navigation -->
+            <nav class="flex space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="find-yourself-one.html" class="nav-link active">Find Yourself One</a>
+                <a href="index.html#blog" class="nav-link">Blog</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 auth-link hidden">
+                    <i class="fas fa-user mr-1"></i> My Profile
+                </a>
+                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300 auth-link hidden">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                </a>
+                <a href="login.html" id="login-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 non-auth-link">Sign In</a>
+            </nav>
+            <!-- Mobile Navigation Toggle -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex flex-col space-y-3">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="index.html#about" class="nav-link">About</a>
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="find-yourself-one.html" class="nav-link active">Find Yourself One</a>
+                    <a href="index.html#blog" class="nav-link">Blog</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">
+                        <i class="fas fa-user mr-1"></i> My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <h1 class="text-4xl font-bold text-purple-600 mb-2">Find Yourself One</h1>
+                <p class="text-gray-600 text-lg">Discover your perfect match from our curated profiles</p>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="max-w-4xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-white rounded-full shadow-md flex items-center p-2">
+                    <input type="text" id="profile-search" placeholder="Search by name, city, or interests..." class="flex-grow px-4 py-2 focus:outline-none">
+                    <button id="search-btn" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full p-2 hover:shadow-lg transition duration-300">
+                        <i class="fas fa-search px-3"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Filters Sidebar -->
+                <div class="md:w-1/4 lg:w-1/5" data-aos="fade-right">
+                    <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
+                        <h3 class="text-xl font-bold text-purple-600 mb-4">Filters</h3>
+                        
+                        <!-- Age Range Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-2">Age Range</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="age-20-30" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="age-20-30" class="ml-2 block text-sm text-gray-700">20-30 years</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="age-30-40" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="age-30-40" class="ml-2 block text-sm text-gray-700">30-40 years</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="age-40-plus" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="age-40-plus" class="ml-2 block text-sm text-gray-700">40+ years</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- City Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-2">City</h4>
+                            <select id="city-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md">
+                                <option value="">All Cities</option>
+                                <option value="new-york">New York</option>
+                                <option value="los-angeles">Los Angeles</option>
+                                <option value="chicago">Chicago</option>
+                                <option value="houston">Houston</option>
+                                <option value="miami">Miami</option>
+                                <option value="san-francisco">San Francisco</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Gender Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-2">Gender</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="gender-male" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="gender-male" class="ml-2 block text-sm text-gray-700">Male</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="gender-female" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="gender-female" class="ml-2 block text-sm text-gray-700">Female</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="gender-other" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="gender-other" class="ml-2 block text-sm text-gray-700">Other</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preferences Filter -->
+                        <div class="mb-6">
+                            <h4 class="font-medium text-gray-700 mb-2">Preferences</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="pref-serious" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="pref-serious" class="ml-2 block text-sm text-gray-700">Serious Relationship</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="pref-casual" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="pref-casual" class="ml-2 block text-sm text-gray-700">Casual Dating</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="pref-friendship" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="pref-friendship" class="ml-2 block text-sm text-gray-700">Friendship</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Clear Filters Button -->
+                        <button id="clear-filters" class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition duration-300">
+                            Clear All Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Profiles Grid -->
+                <div class="md:w-3/4 lg:w-4/5" data-aos="fade-left">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="profiles-grid">
+                        <!-- Profiles will be loaded dynamically from the database -->
+                        <div class="col-span-full text-center py-12 text-gray-500" id="loading-profiles">
+                            <i class="fas fa-circle-notch fa-spin text-purple-500 text-3xl mb-3"></i>
+                            <p>Loading profiles...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-10">
+                        <nav class="inline-flex rounded-md shadow-sm">
+                            <a href="#" class="inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                <i class="fas fa-chevron-left mr-2"></i> Previous
+                            </a>
+                            <a href="#" class="inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-purple-600">1</a>
+                            <a href="#" class="inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
+                            <a href="#" class="inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
+                            <a href="#" class="inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                Next <i class="fas fa-chevron-right ml-2"></i>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">The ConnectSphere</h3>
+                    <p class="text-gray-400 mb-4">Where meaningful connections happen. Join thousands who have found their life partners through our platform.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="index.html#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="find-yourself-one.html" class="text-gray-400 hover:text-white transition duration-300">Find Yourself One</a></li>
+                        <li><a href="index.html#blog" class="text-gray-400 hover:text-white transition duration-300">Blog</a></li>
+                        <li><a href="index.html#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-purple-500 mt-1 mr-3"></i>
+                            <span class="text-gray-400">123 Love Street, Relationship City, RC 10001</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-purple-500 mr-3"></i>
+                            <span class="text-gray-400">+1 (123) 456-7890</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-purple-500 mr-3"></i>
+                            <span class="text-gray-400">info@connectsphere.com</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Subscribe to Our Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Get the latest updates and relationship tips delivered to your inbox.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your Email" class="px-4 py-2 w-full rounded-l-md focus:outline-none">
+                        <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2 rounded-r-md hover:shadow-lg transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 mb-4 md:mb-0">&copy; 2025 The ConnectSphere. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Removed inline JavaScript to prevent duplicate profile loading -->
+        
+        // Function to calculate age from birthdate
+        function calculateAge(birthdate) {
+            if (!birthdate) return 25; // Default age if no birthdate
+            
+            const today = new Date();
+            const birthDate = new Date(birthdate);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+        
+        // Function to create a profile card from database profile
+        function createProfileCard(profile) {
+            // Calculate age from birthdate
+            const age = calculateAge(profile.birthdate);
+            
+            // Create interests tags from array
+            let interestTags = '';
+            if (profile.interests && profile.interests.length > 0) {
+                profile.interests.forEach(interest => {
+                    interestTags += `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span>`;
+                });
+            }
+            
+            // Create relationship type tags from array
+            let relationshipTags = '';
+            if (profile.relationship_type && profile.relationship_type.length > 0) {
+                profile.relationship_type.forEach(type => {
+                    relationshipTags += `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span>`;
+                });
+            }
+            
+            return `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105" data-aos="fade-up">
+                    <img src="${getRandomImage()}" alt="${profile.full_name || 'User'}" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-xl font-bold text-purple-600">${profile.full_name || 'Anonymous'}, ${age}</h3>
+                            <span class="text-sm text-gray-500">${profile.city || 'Unknown location'}</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">${profile.bio || 'No bio available.'}</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            ${interestTags}
+                            ${relationshipTags}
+                        </div>
+                        <button class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
+                            Connect
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Function to fetch profiles from Supabase
+        async function fetchProfiles() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('profiles')
+                    .select('*');
+                
+                if (error) {
+                    console.error('Error fetching profiles:', error);
+                    return [];
+                }
+                
+                return data || [];
+            } catch (error) {
+                console.error('Error in fetchProfiles:', error);
+                return [];
+            }
+        }
+        
+        // Function to load profiles and update UI - Modified to prevent duplicate loading
+        async function loadProfiles() {
+            // Don't load profiles here - the external JS file will handle this
+            console.log('Profile loading handled by external JS file to prevent duplicates');
+            // We're keeping this function to maintain structure but not loading profiles twice
+            return;
+        }
+        
+        // Function to set up connect buttons
+        function setupConnectButtons() {
+            const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
+            
+            connectButtons.forEach(button => {
+                // Only add event listener if it doesn't already have one
+                if (!button.hasAttribute('data-initialized')) {
+                    button.setAttribute('data-initialized', 'true');
+                    button.addEventListener('click', function() {
+                        // Mock connection functionality
+                        const profileName = this.closest('.p-6').querySelector('h3').textContent;
+                        alert(`Connection request sent to ${profileName}! They will be notified of your interest.`);
+                        
+                        // Change button text
+                        this.textContent = 'Request Sent';
+                        this.disabled = true;
+                        this.classList.add('opacity-75');
+                    });
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS animations
+            AOS.init();
+            
+            // Initialize Supabase client
+            const supabase = createClient(
+                'https://jucwtfexhavfkhhfpcdv.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo'
+            );
+            
+            // Random images to use for profiles
+            const profileImages = [
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
+                "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+            ];
+            
+            // Function to get a random image
+            function getRandomImage() {
+                return profileImages[Math.floor(Math.random() * profileImages.length)];
+            }
+            
+            // Function to calculate age from birthdate
+            function calculateAge(birthdate) {
+                if (!birthdate) return 25; // Default age
+                
+                const today = new Date();
+                const birthDate = new Date(birthdate);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                return age;
+            }
+            
+            // Load profiles from database
+            async function loadProfiles() {
+                try {
+                    const { data: profiles, error } = await supabase
+                        .from('profiles')
+                        .select('*');
+                    
+                    if (error) {
+                        console.error('Error loading profiles:', error);
+                        return;
+                    }
+                    
+                    if (profiles && profiles.length > 0) {
+                        const profilesGrid = document.getElementById('profiles-grid');
+                        
+                        // Create cards for each profile
+                        profiles.forEach(profile => {
+                            // Calculate age
+                            const age = calculateAge(profile.birthdate);
+                            
+                            // Create interest tags
+                            let interestTags = '';
+                            if (profile.interests && profile.interests.length > 0) {
+                                profile.interests.forEach(interest => {
+                                    interestTags += `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span> `;
+                                });
+                            }
+                            
+                            // Create relationship type tags
+                            if (profile.relationship_types && profile.relationship_types.length > 0) {
+                                profile.relationship_types.forEach(type => {
+                                    interestTags += `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span> `;
+                                });
+                            }
+                            
+                            // Create card HTML
+                            const cardHTML = `
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
+                                    <img src="${getRandomImage()}" alt="Profile Image" class="w-full h-64 object-cover">
+                                    <div class="p-6">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h3 class="text-xl font-bold text-purple-600">${profile.first_name || 'User'}, ${age}</h3>
+                                            <span class="text-sm text-gray-500">${profile.city || 'Unknown Location'}</span>
+                                        </div>
+                                        <p class="text-gray-600 mb-4">${profile.bio || 'No bio available'}</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${interestTags}
+                                        </div>
+                                        <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
+                                            Connect
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Add card to the beginning of the grid
+                            profilesGrid.insertAdjacentHTML('afterbegin', cardHTML);
+                        });
+                        
+                        console.log(`Added ${profiles.length} real profiles from the database`);
+                        
+                        // Add event listeners to connect buttons
+                        setupConnectButtons();
+                    }
+                } catch (err) {
+                    console.error('Error loading profiles:', err);
+                }
+            }
+            
+            // Setup connect buttons event handlers
+            function setupConnectButtons() {
+                const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
+                
+                connectButtons.forEach(button => {
+                    // Only add event listener if it doesn't already have one
+                    if (!button.hasAttribute('data-initialized')) {
+                        button.setAttribute('data-initialized', 'true');
+                        button.addEventListener('click', function() {
+                            // Mock connection functionality
+                            const profileName = this.closest('.p-6').querySelector('h3').textContent;
+                            alert(`Connection request sent to ${profileName}! They will be notified of your interest.`);
+                            
+                            // Change button text
+                            this.textContent = 'Request Sent';
+                            this.disabled = true;
+                            this.classList.add('opacity-75');
+                        });
+                    }
+                });
+            }
+            
+            // Helper function to create Supabase client correctly
+            function createClient(supabaseUrl, supabaseKey) {
+                return supabase.createClient(supabaseUrl, supabaseKey);
+            }
+            
+            // Profiles will be loaded from external JS file
+            // loadProfiles(); - Disabled to prevent duplicate loading
+            
+            // Set up search functionality
+            setupSearch();
+            
+            // Setup search functionality
+            function setupSearch() {
+                const searchInput = document.getElementById('profile-search');
+                const searchBtn = document.getElementById('search-btn');
+                
+                if (searchBtn && searchInput) {
+                    searchBtn.addEventListener('click', function() {
+                        const searchTerm = searchInput.value.toLowerCase();
+                        const profileCards = document.querySelectorAll('#profiles-grid > div.bg-white');
+                        
+                        // Filter cards based on search term
+                        profileCards.forEach(card => {
+                            const name = card.querySelector('h3').textContent.toLowerCase();
+                            const city = card.querySelector('span.text-gray-500').textContent.toLowerCase();
+                            const description = card.querySelector('p.text-gray-600').textContent.toLowerCase();
+                            const tags = Array.from(card.querySelectorAll('span.rounded-full')).map(tag => tag.textContent.toLowerCase());
+                            
+                            // Check if any field contains the search term
+                            const matchesSearch = 
+                                name.includes(searchTerm) || 
+                                city.includes(searchTerm) || 
+                                description.includes(searchTerm) || 
+                                tags.some(tag => tag.includes(searchTerm));
+                            
+                            // Show/hide based on search match
+                            if (matchesSearch || searchTerm === '') {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        });
+                    });
+                    
+                    // Allow search on Enter key
+                    searchInput.addEventListener('keyup', function(e) {
+                        if (e.key === 'Enter') {
+                            searchBtn.click();
+                        }
+                    });
+                }
+                
+                // Clear filters button
+                const clearFiltersBtn = document.getElementById('clear-filters');
+                const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                const cityFilter = document.getElementById('city-filter');
+                
+                if (clearFiltersBtn) {
+                    clearFiltersBtn.addEventListener('click', function() {
+                        // Reset all checkboxes
+                        filterCheckboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                        
+                        // Reset city select
+                        if (cityFilter) {
+                            cityFilter.value = '';
+                        }
+                        
+                        // Reset search
+                        if (searchInput) {
+                            searchInput.value = '';
+                        }
+                        
+                        // Show all profiles
+                        const profileCards = document.querySelectorAll('#profiles-grid > div.bg-white');
+                        profileCards.forEach(card => {
+                            card.classList.remove('hidden');
+                        });
+                    });
+                }
+            }
+                // Profiles will be loaded from external JS file
+                // loadProfiles(); - Disabled to prevent duplicate loading
+            });
+        });
+    </script>
+    
+    <!-- All inline scripts removed to prevent duplicate profile loading -->
+                
+                // Function to calculate age from birthdate
+                function calculateAge(birthdate) {
+                    if (!birthdate) return 'N/A';
+                    
+                    const birthDate = new Date(birthdate);
+                    const today = new Date();
+                    
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    
+                    return age;
+                }
+                
+                // Function to get random profile images
+                function getRandomImage() {
+                    const images = [
+                        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+                        'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+                        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80'
+                    ];
+                    
+                    return images[Math.floor(Math.random() * images.length)];
+                }
+                
+                // Function to create a profile card from database profile
+                function createProfileCard(profile) {
+                    // Calculate age from birthdate
+                    const age = calculateAge(profile.birthdate);
+                    
+                    // Create interests tags from array
+                    let interestTags = '';
+                if (profile.interests && profile.interests.length > 0) {
+                    profile.interests.forEach(interest => {
+                        interestTags += `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span>`;
+                    });
+                }
+                
+                // Create relationship type tags
+                if (profile.relationship_types && profile.relationship_types.length > 0) {
+                    profile.relationship_types.forEach(type => {
+                        interestTags += `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span>`;
+                    });
+                }
+                
+                // Create card HTML
+                const cardHTML = `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
+                        <img src="${getRandomImage()}" alt="Profile Image" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-xl font-bold text-purple-600">${profile.first_name || 'User'}, ${age}</h3>
+                                <span class="text-sm text-gray-500">${profile.city || 'Unknown Location'}</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">${profile.bio || 'No bio available'}</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${interestTags}
+                            </div>
+                            <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
+                                Connect
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                return cardHTML;
+            }
+            
+            // Function to fetch profiles from Supabase
+            async function fetchProfiles() {
+                try {
+                    // Check if supabaseClient is properly initialized
+                    if (!supabaseClient || typeof supabaseClient.from !== 'function') {
+                        console.error('Supabase client not properly initialized');
+                        return [];
+                    }
+                    
+                    const { data, error } = await supabaseClient
+                        .from('profiles')
+                        .select('*');
+                    
+                    if (error) {
+                        console.error('Error fetching profiles:', error);
+                        return [];
+                    }
+                    
+                    console.log('Successfully fetched profiles:', data ? data.length : 0);
+                    return data || [];
+                } catch (error) {
+                    console.error('Error in fetchProfiles:', error);
+                    return [];
+                }
+            }
+            
+            // Fetch profiles from database
+            async function loadProfiles() {
+                const profilesGrid = document.getElementById('profiles-grid');
+                
+                // Clear existing placeholder cards
+                profilesGrid.innerHTML = '';
+                
+                try {
+                    // Fetch profiles from database
+                    const profiles = await fetchProfiles();
+                    
+                    if (profiles.length === 0) {
+                        // If no profiles, display a message
+                        profilesGrid.innerHTML = `
+                            <div class="col-span-full text-center py-8">
+                                <p class="text-gray-500 text-lg">No profiles found. Be the first to sign up!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Create a card for each profile
+                    profiles.forEach(profile => {
+                        const card = createProfileCard(profile);
+                        profilesGrid.innerHTML += card;
+                    });
+                    
+                    // Set up connect buttons for the new cards
+                    setupConnectButtons();
+                } catch (error) {
+                    console.error('Error loading profiles:', error);
+                    profilesGrid.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <p class="text-gray-500 text-lg">Error loading profiles. Please try again later.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Function to setup connect buttons
+            function setupConnectButtons() {
+                const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
+                
+                connectButtons.forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const userId = this.dataset.userId;
+                        
+                        try {
+                            // Get current user
+                            const currentUser = await window.auth.getUserData();
+                            
+                            if (!currentUser) {
+                                alert('You must be logged in to connect with other users.');
+                                return;
+                            }
+                            
+                            // Create connection request in connections table
+                            const { error } = await supabaseClient
+                                .from('connections')
+                                .insert([
+                                    {
+                                        requester_id: currentUser.id,
+                                        receiver_id: userId,
+                                        status: 'pending',
+                                        created_at: new Date()
+                                    }
+                                ]);
+                            
+                            if (error) {
+                                throw error;
+                            }
+                            
+                            // Update button to show pending
+                            this.textContent = 'Request Sent';
+                            this.disabled = true;
+                            this.classList.add('bg-gray-400');
+                            this.classList.remove('from-purple-600', 'to-pink-500');
+                        } catch (error) {
+                            console.error('Error connecting with user:', error);
+                            alert('Failed to send connection request. Please try again.');
+            
+            // Find Yourself One Page Specific JavaScript
+            // Check authentication status using our own implementation
+            supabaseClient.auth.getSession().then(({ data }) => {
+                const user = data.session?.user;
+                console.log('Auth state checked:', user ? 'Authenticated' : 'Not authenticated');
+                isLoggedIn = !!user; // Update the isLoggedIn variable based on user state
+            });
+            // Authentication check is handled by the checkAuthState function above
+            // Variables for UI state based on authentication
+            let isLoggedIn = false; // This will be updated by the checkAuthState callback
+            
+            // Search functionality
+            const searchInput = document.getElementById('profile-search');
+            const searchBtn = document.getElementById('search-btn');
+            const profilesGrid = document.getElementById('profiles-grid');
+            const profileCards = profilesGrid.querySelectorAll('div.bg-white');
+            
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', function() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    
+                    // Simple search implementation (front-end only)
+                    profileCards.forEach(card => {
+                        const name = card.querySelector('h3').textContent.toLowerCase();
+                        const city = card.querySelector('span.text-gray-500').textContent.toLowerCase();
+                        const description = card.querySelector('p.text-gray-600').textContent.toLowerCase();
+                        const tags = Array.from(card.querySelectorAll('span.rounded-full')).map(tag => tag.textContent.toLowerCase());
+                        
+                        // Check if any field contains the search term
+                        const matchesSearch = 
+                            name.includes(searchTerm) || 
+                            city.includes(searchTerm) || 
+                            description.includes(searchTerm) || 
+                            tags.some(tag => tag.includes(searchTerm));
+                        
+                        // Show/hide based on search match
+                        if (matchesSearch || searchTerm === '') {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                });
+                
+                // Allow search on Enter key
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        searchBtn.click();
+                    }
+                });
+            }
+            
+            // Clear filters button
+            const clearFiltersBtn = document.getElementById('clear-filters');
+            const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            const cityFilter = document.getElementById('city-filter');
+            
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', function() {
+                    // Reset all checkboxes
+                    filterCheckboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    
+                    // Reset city select
+                    if (cityFilter) {
+                        cityFilter.value = '';
+                    }
+                    
+                    // Reset search
+                    if (searchInput) {
+                        searchInput.value = '';
+                    }
+                    
+                    // Show all profiles
+                    profileCards.forEach(card => {
+                        card.classList.remove('hidden');
+                    });
+                });
+            }
+            
+            // Connect buttons
+            const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
+            
+            connectButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Mock connection functionality
+                    const profileName = this.closest('.p-6').querySelector('h3').textContent;
+                    alert(`Connection request sent to ${profileName}! They will be notified of your interest.`);
+                    
+                    // Change button text
+                    this.textContent = 'Request Sent';
+                    this.disabled = true;
+                    this.classList.add('opacity-75');
+                });
+            });
+        });
+    </script>
+    <!-- Supabase and Authentication Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/authNavigation.js"></script>
+    <!-- AOS Animation Library -->    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Find Yourself One Page Script -->
+    <script src="js/find-yourself-one.js"></script>
+    <!-- Fix for header visibility -->
+    <script src="js/fix-header.js"></script>
+</body>
+</html>

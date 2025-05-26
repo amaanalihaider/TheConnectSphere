@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparent Navigation - ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <!-- Hero Section with Background Image -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Find Your Perfect Connection</h1>
+            <p class="hero-subtitle">Connect with like-minded individuals on ConnectSphere</p>
+            <div class="hero-buttons">
+                <a href="#" class="hero-button primary">Get Started</a>
+                <a href="#" class="hero-button secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Transparent Navigation Bar -->
+    <header class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-white font-bold text-xl transition-colors duration-300">
+                        ConnectSphere
+                    </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#" class="nav-link active">Home</a>
+                    <a href="#" class="nav-link">Find Match</a>
+                    <a href="#" class="nav-link">Chat</a>
+                    <a href="#" class="nav-link">Subscription</a>
+                    <a href="#" class="nav-link">Profile</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <a href="#" class="login-btn">Login</a>
+                    <a href="#" class="signup-btn">Sign Up</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-button">
+                        <i class="fas fa-bars text-white text-xl transition-colors duration-300"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu hidden md:hidden">
+                <a href="#" class="mobile-link active">Home</a>
+                <a href="#" class="mobile-link">Find Match</a>
+                <a href="#" class="mobile-link">Chat</a>
+                <a href="#" class="mobile-link">Subscription</a>
+                <a href="#" class="mobile-link">Profile</a>
+                <div class="pt-4 border-t border-gray-700 mt-2">
+                    <a href="#" class="mobile-auth-link">Login</a>
+                    <a href="#" class="mobile-auth-link">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Content for Demo -->
+    <main class="py-12">
+        <div class="container mx-auto px-4">
+            <section class="mt-20 mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8">Transparent Navigation Design</h2>
+                <p class="text-center mb-8 max-w-3xl mx-auto">A modern, transparent navigation bar that changes appearance on scroll. Perfect for landing pages with hero sections.</p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Key Features:</h3>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>Transparent background that becomes solid on scroll</li>
+                        <li>Text color changes for better visibility</li>
+                        <li>Smooth transitions between states</li>
+                        <li>Fully responsive with mobile-friendly menu</li>
+                        <li>Elegant design that complements hero sections</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="py-16 bg-gray-50 rounded-lg">
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold mb-4">Try It Out</h3>
+                    <p class="mb-6">Scroll down to see how the navigation bar changes appearance.</p>
+                    <div class="flex justify-center">
+                        <a href="#" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors duration-300">Scroll to Top</a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Add more content to enable scrolling -->
+            <div class="h-screen"></div>
+        </div>
+    </main>
+    
+    <!-- JavaScript for Navigation Behavior -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.getElementById('navbar');
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            // Handle scroll behavior
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Mobile menu toggle
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Scroll to top functionality
+            document.querySelector('a[href="#"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Find Yourself One Page - Search & Filter Functionality Initialized');
     
+    // Initialize the Supabase client first
+    const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    
     // Define a global function that auth-guard.js can call to initialize features
     // that require authentication
     window.initializeAuthenticatedFeatures = function() {
@@ -36,11 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update navigation
     updateNavigation();
-    
-    // Initialize the Supabase client
-    const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
     
     // Store all profiles to enable client-side filtering
     let allProfiles = [];
@@ -155,12 +155,70 @@ document.addEventListener('DOMContentLoaded', function() {
         const connectButtons = document.querySelectorAll('.connect-btn');
         
         connectButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', async function() {
                 const profileId = this.getAttribute('data-profile-id');
                 console.log(`Connect requested with profile ID: ${profileId}`);
                 
-                // For now, just show an alert
-                alert(`Connection request sent to profile ID: ${profileId}`);
+                try {
+                    // Check if user is logged in
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) {
+                        alert('Please log in to connect with other users');
+                        return;
+                    }
+                    
+                    // Create connection in database
+                    const { data: connectionData, error: connectionError } = await supabaseClient
+                        .from('connections')
+                        .insert([
+                            {
+                                initiator_user_id: session.user.id,
+                                target_user_id: profileId,
+                                status: 'pending'
+                            }
+                        ]);
+                    
+                    if (connectionError) {
+                        console.error('Error creating connection:', connectionError);
+                        alert('Error creating connection. Please try again.');
+                        return;
+                    }
+                    
+                    // Manually create a notification
+                    const { data: userData } = await supabaseClient
+                        .from('profiles')
+                        .select('first_name, last_name')
+                        .eq('id', session.user.id)
+                        .single();
+                        
+                    if (userData) {
+                        const senderName = `${userData.first_name} ${userData.last_name}`;
+                        
+                        // Create the notification
+                        const { error: notificationError } = await supabaseClient
+                            .from('notifications')
+                            .insert([
+                                {
+                                    recipient_id: profileId,
+                                    sender_id: session.user.id,
+                                    type: 'connection-request',
+                                    message: `${senderName} wants to connect with you`,
+                                    read: false
+                                }
+                            ]);
+                            
+                        if (notificationError) {
+                            console.error('Failed to create notification:', notificationError);
+                        } else {
+                            console.log('Notification created successfully');
+                        }
+                    }
+                    
+                    alert(`Connection request sent to profile ID: ${profileId}`);
+                } catch (error) {
+                    console.error('Error in connection process:', error);
+                    alert('An error occurred. Please try again.');
+                }
             });
         });
     }

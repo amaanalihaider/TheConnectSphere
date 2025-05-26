@@ -10,54 +10,176 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="css/header-fix.css">
+    <link rel="stylesheet" href="css/like-button.css">
+    <link rel="stylesheet" href="css/dropdown-nav.css">
+    <link rel="stylesheet" href="css/profile-button-fix.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <!-- SweetAlert2 for better alert dialogs -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Supabase JS Library - UMD version for direct browser usage -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body class="font-sans antialiased text-gray-800 bg-gray-50">
     <!-- Header -->
-    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold text-purple-600">
-                <span class="text-pink-500">The</span> ConnectSphere
-            </a>
-            <!-- Desktop Navigation -->
-            <nav class="flex space-x-6">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="index.html#about" class="nav-link">About</a>
-                <a href="index.html#features" class="nav-link">Features</a>
-                <a href="find-yourself-one.html" class="nav-link active">Find Yourself One</a>
-                <a href="index.html#blog" class="nav-link">Blog</a>
-                <a href="index.html#contact" class="nav-link">Contact</a>
-                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 auth-link hidden">
-                    <i class="fas fa-user mr-1"></i> My Profile
-                </a>
-                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300 auth-link hidden">
-                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                </a>
-                <a href="login.html" id="login-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 non-auth-link">Sign In</a>
-            </nav>
-            <!-- Mobile Navigation Toggle -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
-            <div class="container mx-auto px-4 py-3">
-                <div class="flex flex-col space-y-3">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="index.html#about" class="nav-link">About</a>
-                    <a href="index.html#features" class="nav-link">Features</a>
-                    <a href="find-yourself-one.html" class="nav-link active">Find Yourself One</a>
-                    <a href="index.html#blog" class="nav-link">Blog</a>
-                    <a href="index.html#contact" class="nav-link">Contact</a>
-                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300">
-                        <i class="fas fa-user mr-1"></i> My Profile
+    <header id="header" class="fixed w-full sticky top-0 z-50 transition-all duration-300 bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
+                        <span>The</span> <span>ConnectSphere</span>
                     </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="md:flex items-center space-x-1 px-4">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#features" class="nav-link">Features</a>
+                    
+                    <!-- Dropdown: Find Match -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center active">
+                            Find Match
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="find-yourself-one.html" class="dropdown-item">
+                                <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                            </a>
+                            <a href="find-yourself-one.html#search" class="dropdown-item">
+                                <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                            </a>
+                            <a href="find-yourself-one.html#connections" class="dropdown-item">
+                                <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown: Relationship Tools -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Relationship 
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="chat-advisor.html" class="dropdown-item">
+                                <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                            </a>
+                            <a href="relationship-dashboard.html" class="dropdown-item">
+                                <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="subscription.html" class="nav-link">Subscription</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="flex items-center space-x-3 ml-4">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="non-auth-links">
+                        <a href="login.html" id="login-btn" class="login-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; color: #7c3aed; font-weight: 500; border: 1px solid #7c3aed; border-radius: 9999px; margin-right: 0.5rem; background-color: white;" onclick="window.location.href='login.html'; return false;"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" id="signup-btn" class="signup-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: white; font-weight: 500; border-radius: 9999px; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Hidden Auth Links -->
+                    <div class="auth-links hidden">
+                        <!-- Notification Bell -->
+                        <div class="notification-bell auth-link mr-4" id="notification-bell">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        
+                        <!-- Dropdown: Profile -->
+                        <div class="relative profile-dropdown-container auth-link" id="profile-dropdown-container">
+                            <button id="profile-btn" class="profile-btn"><i class="fas fa-user-circle mr-2"></i>My Profile</button>
+                            <div id="profile-dropdown" class="profile-dropdown">
+                                <div class="p-3 border-b border-gray-100">
+                                    <p class="font-medium text-gray-800">John Doe</p>
+                                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="my-profile.html" class="dropdown-item">
+                                        <i class="fas fa-user mr-2 text-purple-500"></i>View Profile
+                                    </a>
+                                    <a href="relationship-dashboard.html" class="dropdown-item">
+                                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Health Dashboard
+                                    </a>
+                                    <a href="subscription.html" class="dropdown-item">
+                                        <i class="fas fa-crown mr-2 text-purple-500"></i>Subscription
+                                    </a>
+                                </div>
+                                <div class="p-3 border-t border-gray-100">
+                                    <a href="#" id="logout-btn" class="logout-btn w-full flex justify-center">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="block md:hidden">
+                    <button id="mobile-menu-button" class="mobile-menu-button p-2 rounded-md hover:bg-gray-100">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden py-4">
+                <a href="index.html" class="mobile-link block py-2">Home</a>
+                <a href="#about" class="mobile-link block py-2">About</a>
+                <a href="#features" class="mobile-link block py-2">Features</a>
+                
+                <!-- Mobile Dropdown: Find Match -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button w-full text-left py-2 active">
+                        Find Match <i class="fas fa-chevron-down float-right mt-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="find-yourself-one.html" class="mobile-dropdown-item active">
+                            <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                        </a>
+                        <a href="find-yourself-one.html#search" class="mobile-dropdown-item">
+                            <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                        </a>
+                        <a href="find-yourself-one.html#connections" class="mobile-dropdown-item">
+                            <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Dropdown: Relationship Tools -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button w-full text-left py-2">
+                        Relationship <i class="fas fa-chevron-down float-right mt-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="chat-advisor.html" class="mobile-dropdown-item">
+                            <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                        </a>
+                        <a href="relationship-dashboard.html" class="mobile-dropdown-item">
+                            <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="subscription.html" class="mobile-link block py-2">Subscription</a>
+                <a href="#blog" class="mobile-link block py-2">Blog</a>
+                <a href="#contact" class="mobile-link block py-2">Contact</a>
+                
+                <!-- Mobile Auth Buttons -->
+                <div class="mt-4 non-auth-links">
+                    <a href="login.html" class="mobile-auth-link"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                    <a href="signup.html" class="mobile-signup-link"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                </div>
+                
+                <div class="mt-4 auth-links hidden">
+                    <a href="#" id="mobile-logout-btn" class="mobile-logout-link"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
                 </div>
             </div>
         </div>
@@ -73,12 +195,83 @@
             
             <!-- Search Bar -->
             <div class="max-w-4xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="100">
-                <div class="bg-white rounded-full shadow-md flex items-center p-2">
-                    <input type="text" id="profile-search" placeholder="Search by name, city, or interests..." class="flex-grow px-4 py-2 focus:outline-none">
-                    <button id="search-btn" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full p-2 hover:shadow-lg transition duration-300">
-                        <i class="fas fa-search px-3"></i>
-                    </button>
-                </div>
+                <form id="search-form" onsubmit="event.preventDefault(); searchProfiles(); return false;">
+                    <div class="bg-white rounded-full shadow-md flex items-center p-2">
+                        <input type="text" id="profile-search" placeholder="Search by name, city, or interests..." class="flex-grow px-4 py-2 focus:outline-none" oninput="searchProfiles()">
+                        <button type="button" id="search-btn" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full p-2 hover:shadow-lg transition duration-300" onclick="searchProfiles()">
+                            <i class="fas fa-search px-3"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <script>
+                // Global function to apply both search and city filters together
+                function applyAllFilters() {
+                    console.log('Applying all filters');
+                    const searchInput = document.getElementById('profile-search');
+                    const cityFilter = document.getElementById('city-filter');
+                    const profilesGrid = document.getElementById('profiles-grid');
+                    
+                    if (!profilesGrid) {
+                        console.error('Profiles grid not found');
+                        return;
+                    }
+                    
+                    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                    const selectedCity = cityFilter ? cityFilter.value.toLowerCase() : '';
+                    
+                    console.log('Filtering with:', { searchTerm, selectedCity });
+                    
+                    // Wait for profiles to load
+                    setTimeout(function() {
+                        const profileCards = profilesGrid.children;
+                        let foundMatch = false;
+                        
+                        // Check each card
+                        Array.from(profileCards).forEach(card => {
+                            // Skip the loading indicator or no results message
+                            if (card.classList.contains('col-span-full')) return;
+                            
+                            const cardText = card.textContent.toLowerCase();
+                            
+                            // Apply both filters - card must match both conditions
+                            const matchesSearch = !searchTerm || cardText.includes(searchTerm);
+                            const matchesCity = !selectedCity || cardText.includes(selectedCity);
+                            
+                            if (matchesSearch && matchesCity) {
+                                card.style.display = '';
+                                foundMatch = true;
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                        
+                        // Show no results message if needed
+                        if (!foundMatch && profileCards.length > 0) {
+                            // First remove any existing no-results message
+                            const existingMessage = profilesGrid.querySelector('.col-span-full');
+                            if (existingMessage) {
+                                existingMessage.remove();
+                            }
+                            
+                            // Create a new message
+                            const noResults = document.createElement('div');
+                            noResults.className = 'col-span-full text-center py-12 text-gray-500';
+                            noResults.innerHTML = `
+                                <i class="fas fa-search text-purple-500 text-3xl mb-3"></i>
+                                <p>No profiles match your search criteria. Try adjusting your filters.</p>
+                            `;
+                            profilesGrid.appendChild(noResults);
+                        }
+                    }, 500);
+                }
+                
+                // Individual filter functions that call the main function
+                function searchProfiles() {
+                    console.log('Search function called');
+                    applyAllFilters();
+                }
+                </script>
             </div>
             
             <div class="flex flex-col md:flex-row gap-8">
@@ -109,840 +302,406 @@
                         <!-- City Filter -->
                         <div class="mb-6">
                             <h4 class="font-medium text-gray-700 mb-2">City</h4>
-                            <select id="city-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md">
+                            <select id="city-filter" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50" onchange="filterByCity()">
                                 <option value="">All Cities</option>
-                                <option value="new-york">New York</option>
-                                <option value="los-angeles">Los Angeles</option>
-                                <option value="chicago">Chicago</option>
-                                <option value="houston">Houston</option>
-                                <option value="miami">Miami</option>
-                                <option value="san-francisco">San Francisco</option>
+                                <option value="New York">New York</option>
+                                <option value="Los Angeles">Los Angeles</option>
+                                <option value="Chicago">Chicago</option>
+                                <option value="Houston">Houston</option>
+                                <option value="San Francisco">San Francisco</option>
+                                <option value="Miami">Miami</option>
+                                <option value="Seattle">Seattle</option>
                             </select>
+                            
+                            <script>
+                            function filterByCity() {
+                                console.log('City filter function called');
+                                applyAllFilters(); // Use the combined filter function
+                            }
+                            </script>
                         </div>
                         
-                        <!-- Gender Filter -->
+                        <!-- Interests Filter -->
                         <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-2">Gender</h4>
+                            <h4 class="font-medium text-gray-700 mb-2">Interests</h4>
                             <div class="space-y-2">
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="gender-male" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="gender-male" class="ml-2 block text-sm text-gray-700">Male</label>
+                                    <input type="checkbox" id="interest-travel" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="interest-travel" class="ml-2 block text-sm text-gray-700">Travel</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="gender-female" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="gender-female" class="ml-2 block text-sm text-gray-700">Female</label>
+                                    <input type="checkbox" id="interest-music" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="interest-music" class="ml-2 block text-sm text-gray-700">Music</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="gender-other" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="gender-other" class="ml-2 block text-sm text-gray-700">Other</label>
+                                    <input type="checkbox" id="interest-food" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="interest-food" class="ml-2 block text-sm text-gray-700">Food</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="interest-sports" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="interest-sports" class="ml-2 block text-sm text-gray-700">Sports</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="interest-tech" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="interest-tech" class="ml-2 block text-sm text-gray-700">Technology</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="interest-art" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="interest-art" class="ml-2 block text-sm text-gray-700">Art</label>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Preferences Filter -->
+                        <!-- Relationship Type Filter -->
                         <div class="mb-6">
-                            <h4 class="font-medium text-gray-700 mb-2">Preferences</h4>
+                            <h4 class="font-medium text-gray-700 mb-2">Relationship Type</h4>
                             <div class="space-y-2">
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="pref-serious" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="pref-serious" class="ml-2 block text-sm text-gray-700">Serious Relationship</label>
+                                    <input type="checkbox" id="type-serious" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="type-serious" class="ml-2 block text-sm text-gray-700">Serious</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="pref-casual" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="pref-casual" class="ml-2 block text-sm text-gray-700">Casual Dating</label>
+                                    <input type="checkbox" id="type-casual" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="type-casual" class="ml-2 block text-sm text-gray-700">Casual</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="pref-friendship" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                    <label for="pref-friendship" class="ml-2 block text-sm text-gray-700">Friendship</label>
+                                    <input type="checkbox" id="type-friendship" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                    <label for="type-friendship" class="ml-2 block text-sm text-gray-700">Friendship</label>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Clear Filters Button -->
-                        <button id="clear-filters" class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 transition duration-300">
-                            Clear All Filters
+                        <button id="clear-filters" class="w-full py-2 px-3 border border-purple-500 text-purple-500 rounded-md hover:bg-purple-50 transition duration-300">
+                            Clear Filters
                         </button>
                     </div>
                 </div>
                 
                 <!-- Profiles Grid -->
-                <div class="md:w-3/4 lg:w-4/5" data-aos="fade-left">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="profiles-grid">
-                        <!-- Profile Card 1 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
-                                 alt="Profile 1" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-xl font-bold text-purple-600">Sarah, 28</h3>
-                                    <span class="text-sm text-gray-500">New York</span>
-                                </div>
-                                <p class="text-gray-600 mb-4">Creative designer who loves traveling and exploring new cultures. Looking for someone who shares my passion for adventure.</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Travel</span>
-                                    <span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">Art</span>
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Serious</span>
-                                </div>
-                                <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                    Connect
-                                </button>
+                <div class="md:w-3/4 lg:w-4/5">
+                    <!-- Subscription Status Banner -->
+                    <div id="subscription-banner" class="mb-6 p-4 rounded-lg bg-purple-50 border border-purple-200 hidden">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-purple-700">Connection Limit</h3>
+                                <p class="text-sm text-gray-600">
+                                    <span id="connection-count">0/5</span> connections used
+                                </p>
                             </div>
+                            <a href="subscription.html" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-md text-sm hover:opacity-90 transition duration-300">
+                                Upgrade Plan
+                            </a>
                         </div>
-                        
-                        <!-- Profile Card 2 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
-                                 alt="Profile 2" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-xl font-bold text-purple-600">Michael, 32</h3>
-                                    <span class="text-sm text-gray-500">Los Angeles</span>
-                                </div>
-                                <p class="text-gray-600 mb-4">Tech entrepreneur with a passion for fitness and outdoor activities. Seeking a partner who values health and ambition.</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Tech</span>
-                                    <span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">Fitness</span>
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Serious</span>
-                                </div>
-                                <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                    Connect
-                                </button>
+                    </div>
+                    
+                    <!-- Connection Limit Warning -->
+                    <div id="limit-warning" class="hidden mb-6 p-4 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-yellow-400 mt-0.5"></i>
                             </div>
-                        </div>
-                        
-                        <!-- Profile Card 3 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80" 
-                                 alt="Profile 3" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-xl font-bold text-purple-600">Emma, 26</h3>
-                                    <span class="text-sm text-gray-500">Chicago</span>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium">Connection Limit Reached</h3>
+                                <div class="mt-2 text-sm">
+                                    <p>You've reached the maximum number of connections for your current plan.</p>
+                                    <a href="subscription.html" class="font-medium underline hover:text-yellow-700">Upgrade your plan</a> for more connections.
                                 </div>
-                                <p class="text-gray-600 mb-4">Marketing professional who loves music, books, and cozy evenings. Looking for someone with similar interests for a meaningful connection.</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Books</span>
-                                    <span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">Music</span>
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Casual</span>
-                                </div>
-                                <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                    Connect
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Profile Card 4 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
-                                 alt="Profile 4" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-xl font-bold text-purple-600">James, 30</h3>
-                                    <span class="text-sm text-gray-500">San Francisco</span>
-                                </div>
-                                <p class="text-gray-600 mb-4">Software engineer who enjoys hiking, photography, and trying new restaurants. Seeking someone to share adventures and quiet moments.</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Tech</span>
-                                    <span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">Outdoors</span>
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Serious</span>
-                                </div>
-                                <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                    Connect
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Profile Card 5 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
-                                 alt="Profile 5" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-xl font-bold text-purple-600">Olivia, 27</h3>
-                                    <span class="text-sm text-gray-500">Miami</span>
-                                </div>
-                                <p class="text-gray-600 mb-4">Event planner with a love for dancing, beach days, and spontaneous trips. Looking for someone fun-loving and adventurous.</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Travel</span>
-                                    <span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">Dance</span>
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Casual</span>
-                                </div>
-                                <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                    Connect
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Profile Card 6 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" 
-                                 alt="Profile 6" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="text-xl font-bold text-purple-600">Daniel, 35</h3>
-                                    <span class="text-sm text-gray-500">Houston</span>
-                                </div>
-                                <p class="text-gray-600 mb-4">Doctor who enjoys cooking, playing guitar, and quiet evenings at home. Looking for a genuine connection with someone who values depth.</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Music</span>
-                                    <span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">Cooking</span>
-                                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">Serious</span>
-                                </div>
-                                <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                    Connect
-                                </button>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Pagination -->
-                    <div class="flex justify-center mt-10">
-                        <nav class="inline-flex rounded-md shadow-sm">
-                            <a href="#" class="inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                <i class="fas fa-chevron-left mr-2"></i> Previous
-                            </a>
-                            <a href="#" class="inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-purple-600">1</a>
-                            <a href="#" class="inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
-                            <a href="#" class="inline-flex items-center px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
-                            <a href="#" class="inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                Next <i class="fas fa-chevron-right ml-2"></i>
-                            </a>
-                        </nav>
+                    <div id="profiles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                        <!-- Loading indicator -->
+                        <div class="col-span-full text-center py-12">
+                            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+                            <p class="mt-2 text-gray-600">Loading profiles...</p>
+                        </div>
+                        
+                        <!-- Profile cards will be dynamically inserted here -->
                     </div>
+                    
+                    <!-- Template for profile cards -->
+                    <template id="profile-card-template">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden profile-card">
+                            <!-- Card content will be populated dynamically -->
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
+    <footer class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white py-12">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-                <!-- Company Info -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-xl font-bold mb-4">The ConnectSphere</h3>
-                    <p class="text-gray-400 mb-4">Where meaningful connections happen. Join thousands who have found their life partners through our platform.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                    <p class="text-gray-300">
+                        Connecting hearts, building relationships, and fostering meaningful connections in our digital age.
+                    </p>
                 </div>
-                
-                <!-- Quick Links -->
                 <div>
                     <h3 class="text-xl font-bold mb-4">Quick Links</h3>
                     <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
-                        <li><a href="index.html#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
-                        <li><a href="index.html#features" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
-                        <li><a href="find-yourself-one.html" class="text-gray-400 hover:text-white transition duration-300">Find Yourself One</a></li>
-                        <li><a href="index.html#blog" class="text-gray-400 hover:text-white transition duration-300">Blog</a></li>
-                        <li><a href="index.html#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="index.html#about" class="text-gray-300 hover:text-white transition duration-300">About</a></li>
+                        <li><a href="index.html#features" class="text-gray-300 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="find-yourself-one.html" class="text-gray-300 hover:text-white transition duration-300">Find Yourself One</a></li>
+                        <li><a href="index.html#contact" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
                     </ul>
                 </div>
-                
-                <!-- Contact Info -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <h3 class="text-xl font-bold mb-4">Support</h3>
                     <ul class="space-y-2">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-purple-500 mt-1 mr-3"></i>
-                            <span class="text-gray-400">123 Love Street, Relationship City, RC 10001</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone-alt text-purple-500 mr-3"></i>
-                            <span class="text-gray-400">+1 (123) 456-7890</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope text-purple-500 mr-3"></i>
-                            <span class="text-gray-400">info@connectsphere.com</span>
-                        </li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Help Center</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Safety Tips</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Terms of Service</a></li>
                     </ul>
                 </div>
-                
-                <!-- Newsletter -->
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Subscribe to Our Newsletter</h3>
-                    <p class="text-gray-400 mb-4">Get the latest updates and relationship tips delivered to your inbox.</p>
-                    <form class="flex">
-                        <input type="email" placeholder="Your Email" class="px-4 py-2 w-full rounded-l-md focus:outline-none">
-                        <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-4 py-2 rounded-r-md hover:shadow-lg transition duration-300">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
+                    <h3 class="text-xl font-bold mb-4">Connect With Us</h3>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-300">
+                        <i class="fas fa-envelope mr-2"></i> hello@connectsphere.com
+                    </p>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-800 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 mb-4 md:mb-0">&copy; 2025 The ConnectSphere. All rights reserved.</p>
-                    <div class="flex space-x-6">
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
-                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a>
-                    </div>
-                </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2025 The ConnectSphere. All rights reserved.</p>
             </div>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // Initialize the Supabase client globally for access across all scripts
-        const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
-        // Ensure supabase is available and create client
-        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-        console.log('Supabase client initialized:', !!supabaseClient);
-        
-        // Random images to use for profiles
-        const profileImages = [
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
-            "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-            "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-        ];
-        
-        // Function to get a random image
-        function getRandomImage() {
-            return profileImages[Math.floor(Math.random() * profileImages.length)];
-        }
-        
-        // Function to calculate age from birthdate
-        function calculateAge(birthdate) {
-            if (!birthdate) return 25; // Default age if no birthdate
-            
-            const today = new Date();
-            const birthDate = new Date(birthdate);
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            
-            return age;
-        }
-        
-        // Function to create a profile card from database profile
-        function createProfileCard(profile) {
-            // Calculate age from birthdate
-            const age = calculateAge(profile.birthdate);
-            
-            // Create interests tags from array
-            let interestTags = '';
-            if (profile.interests && profile.interests.length > 0) {
-                profile.interests.forEach(interest => {
-                    interestTags += `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span>`;
-                });
-            }
-            
-            // Create relationship type tags from array
-            let relationshipTags = '';
-            if (profile.relationship_type && profile.relationship_type.length > 0) {
-                profile.relationship_type.forEach(type => {
-                    relationshipTags += `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span>`;
-                });
-            }
-            
-            return `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105" data-aos="fade-up">
-                    <img src="${getRandomImage()}" alt="${profile.full_name || 'User'}" class="w-full h-64 object-cover">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-bold text-purple-600">${profile.full_name || 'Anonymous'}, ${age}</h3>
-                            <span class="text-sm text-gray-500">${profile.city || 'Unknown location'}</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">${profile.bio || 'No bio available.'}</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            ${interestTags}
-                            ${relationshipTags}
-                        </div>
-                        <button class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                            Connect
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Function to fetch profiles from Supabase
-        async function fetchProfiles() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('profiles')
-                    .select('*');
-                
-                if (error) {
-                    console.error('Error fetching profiles:', error);
-                    return [];
-                }
-                
-                return data || [];
-            } catch (error) {
-                console.error('Error in fetchProfiles:', error);
-                return [];
-            }
-        }
-        
-        // Function to load profiles and update UI
-        async function loadProfiles() {
-            const profilesGrid = document.getElementById('profiles-grid');
-            
-            // Clear existing placeholder cards
-            profilesGrid.innerHTML = '';
-            
-            try {
-                // Fetch profiles from database
-                const profiles = await fetchProfiles();
-                
-                if (profiles.length === 0) {
-                    // If no profiles, display a message
-                    profilesGrid.innerHTML = `
-                        <div class="col-span-full text-center py-8">
-                            <p class="text-gray-500 text-lg">No profiles found. Be the first to sign up!</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Create a card for each profile
-                profiles.forEach(profile => {
-                    const card = createProfileCard(profile);
-                    profilesGrid.innerHTML += card;
-                });
-                
-                // Set up connect buttons for the new cards
-                setupConnectButtons();
-            } catch (error) {
-                console.error('Error loading profiles:', error);
-                profilesGrid.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <p class="text-gray-500 text-lg">Error loading profiles. Please try again later.</p>
-                    </div>
-                `;
-            }
-        }
-        
-        // Function to set up connect buttons
-        function setupConnectButtons() {
-            const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
-            
-            connectButtons.forEach(button => {
-                // Only add event listener if it doesn't already have one
-                if (!button.hasAttribute('data-initialized')) {
-                    button.setAttribute('data-initialized', 'true');
-                    button.addEventListener('click', function() {
-                        // Mock connection functionality
-                        const profileName = this.closest('.p-6').querySelector('h3').textContent;
-                        alert(`Connection request sent to ${profileName}! They will be notified of your interest.`);
-                        
-                        // Change button text
-                        this.textContent = 'Request Sent';
-                        this.disabled = true;
-                        this.classList.add('opacity-75');
-                    });
-                }
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize AOS animations
-            AOS.init();
-            
-            // Initialize Supabase client
-            const supabase = createClient(
-                'https://jucwtfexhavfkhhfpcdv.supabase.co',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo'
-            );
-            
-            // Random images to use for profiles
-            const profileImages = [
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
-                "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-            ];
-            
-            // Function to get a random image
-            function getRandomImage() {
-                return profileImages[Math.floor(Math.random() * profileImages.length)];
-            }
-            
-            // Function to calculate age from birthdate
-            function calculateAge(birthdate) {
-                if (!birthdate) return 25; // Default age
-                
-                const today = new Date();
-                const birthDate = new Date(birthdate);
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDiff = today.getMonth() - birthDate.getMonth();
-                
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                
-                return age;
-            }
-            
-            // Load profiles from database
-            async function loadProfiles() {
-                try {
-                    const { data: profiles, error } = await supabase
-                        .from('profiles')
-                        .select('*');
-                    
-                    if (error) {
-                        console.error('Error loading profiles:', error);
-                        return;
-                    }
-                    
-                    if (profiles && profiles.length > 0) {
-                        const profilesGrid = document.getElementById('profiles-grid');
-                        
-                        // Create cards for each profile
-                        profiles.forEach(profile => {
-                            // Calculate age
-                            const age = calculateAge(profile.birthdate);
-                            
-                            // Create interest tags
-                            let interestTags = '';
-                            if (profile.interests && profile.interests.length > 0) {
-                                profile.interests.forEach(interest => {
-                                    interestTags += `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span> `;
-                                });
-                            }
-                            
-                            // Create relationship type tags
-                            if (profile.relationship_types && profile.relationship_types.length > 0) {
-                                profile.relationship_types.forEach(type => {
-                                    interestTags += `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span> `;
-                                });
-                            }
-                            
-                            // Create card HTML
-                            const cardHTML = `
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                                    <img src="${getRandomImage()}" alt="Profile Image" class="w-full h-64 object-cover">
-                                    <div class="p-6">
-                                        <div class="flex justify-between items-center mb-2">
-                                            <h3 class="text-xl font-bold text-purple-600">${profile.first_name || 'User'}, ${age}</h3>
-                                            <span class="text-sm text-gray-500">${profile.city || 'Unknown Location'}</span>
-                                        </div>
-                                        <p class="text-gray-600 mb-4">${profile.bio || 'No bio available'}</p>
-                                        <div class="flex flex-wrap gap-2">
-                                            ${interestTags}
-                                        </div>
-                                        <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                            Connect
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                            
-                            // Add card to the beginning of the grid
-                            profilesGrid.innerHTML += cardHTML;
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error loading profiles:', error);
-                }
-            }
-            
-            // Function to calculate age from birthdate
-            function calculateAge(birthdate) {
-                if (!birthdate) return 'N/A';
-            let interestTags = '';
-            if (profile.interests && profile.interests.length > 0) {
-                profile.interests.forEach(interest => {
-                    interestTags += `<span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full">${interest}</span>`;
-                });
-            }
+        </div>
+    </footer>
 
-            // Create relationship type tags
-            if (profile.relationship_types && profile.relationship_types.length > 0) {
-                profile.relationship_types.forEach(type => {
-                    interestTags += `<span class="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full">${type}</span>`;
-                });
-            }
-
-            // Create card HTML
-            const cardHTML = `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                    <img src="${getRandomImage()}" alt="Profile Image" class="w-full h-64 object-cover">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-bold text-purple-600">${profile.first_name || 'User'}, ${age}</h3>
-                            <span class="text-sm text-gray-500">${profile.city || 'Unknown Location'}</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">${profile.bio || 'No bio available'}</p>
-                        <div class="flex flex-wrap gap-2">
-                            ${interestTags}
-                        </div>
-                        <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300" data-user-id="${profile.id}">
-                            Connect
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            return cardHTML;
-        }
-
-        // Function to fetch profiles from Supabase
-        async function fetchProfiles() {
-            try {
-                // Check if supabaseClient is properly initialized
-                if (!supabaseClient || typeof supabaseClient.from !== 'function') {
-                    console.error('Supabase client not properly initialized');
-                const cardHTML = `
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:scale-105">
-                        <img src="${getRandomImage()}" alt="Profile Image" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-xl font-bold text-purple-600">${profile.first_name || 'User'}, ${age}</h3>
-                                <span class="text-sm text-gray-500">${profile.city || 'Unknown Location'}</span>
-                            </div>
-                            <p class="text-gray-600 mb-4">${profile.bio || 'No bio available'}</p>
-                            <div class="flex flex-wrap gap-2">
-                                ${interestTags}
-                            </div>
-                            <button class="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-md hover:shadow-lg transition duration-300">
-                                Connect
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                return cardHTML;
-            }
-            
-            // Function to fetch profiles from Supabase
-            async function fetchProfiles() {
-                try {
-                    // Check if supabaseClient is properly initialized
-                    if (!supabaseClient || typeof supabaseClient.from !== 'function') {
-                        console.error('Supabase client not properly initialized');
-                        return [];
-                    }
-                    
-                    const { data, error } = await supabaseClient
-                        .from('profiles')
-                        .select('*');
-                    
-                    if (error) {
-                        console.error('Error fetching profiles:', error);
-                        return [];
-                    }
-                    
-                    console.log('Successfully fetched profiles:', data ? data.length : 0);
-                    return data || [];
-                } catch (error) {
-                    console.error('Error in fetchProfiles:', error);
-                    return [];
-                }
-            }
-            
-            // Fetch profiles from database
-            async function loadProfiles() {
-                const profilesGrid = document.getElementById('profiles-grid');
-                
-                // Clear existing placeholder cards
-                profilesGrid.innerHTML = '';
-                
-                try {
-                    // Fetch profiles from database
-                    const profiles = await fetchProfiles();
-                    
-                    if (profiles.length === 0) {
-                        // If no profiles, display a message
-                        profilesGrid.innerHTML = `
-                            <div class="col-span-full text-center py-8">
-                                <p class="text-gray-500 text-lg">No profiles found. Be the first to sign up!</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    // Create a card for each profile
-                    profiles.forEach(profile => {
-                        const card = createProfileCard(profile);
-                        profilesGrid.innerHTML += card;
-                    });
-                    
-                    // Set up connect buttons for the new cards
-                    setupConnectButtons();
-                } catch (error) {
-                    console.error('Error loading profiles:', error);
-                    profilesGrid.innerHTML = `
-                        <div class="col-span-full text-center py-8">
-                            <p class="text-gray-500 text-lg">Error loading profiles. Please try again later.</p>
-                        </div>
-                    `;
-                }
-            }
-            
-            // Function to setup connect buttons
-            function setupConnectButtons() {
-                const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
-                
-                connectButtons.forEach(button => {
-                    button.addEventListener('click', async function() {
-                        const userId = this.dataset.userId;
-                        
-                        try {
-                            // Get current user
-                            const currentUser = await window.auth.getUserData();
-                            
-                            if (!currentUser) {
-                                alert('You must be logged in to connect with other users.');
-                                return;
-                            }
-                            
-                            // Create connection request in connections table
-                            const { error } = await supabaseClient
-                                .from('connections')
-                                .insert([
-                                    {
-                                        requester_id: currentUser.id,
-                                        receiver_id: userId,
-                                        status: 'pending',
-                                        created_at: new Date()
-                                    }
-                                ]);
-                            
-                            if (error) {
-                                throw error;
-                            }
-                            
-                            // Update button to show pending
-                            this.textContent = 'Request Sent';
-                            this.disabled = true;
-                            this.classList.add('bg-gray-400');
-                            this.classList.remove('from-purple-600', 'to-pink-500');
-                        } catch (error) {
-                            console.error('Error connecting with user:', error);
-                            alert('Failed to send connection request. Please try again.');
-                        }
-                    });
-                });
-            }
-            
-            // Fetch profiles from database
-            loadProfiles().then(() => {
-                // After profiles are fetched, set up event listeners
-                setupEventListeners();
-            });
-            
-            // Initialize AOS animations
-            AOS.init();
-            
-            // Find Yourself One Page Specific JavaScript
-            // Check authentication status using our own implementation
-            supabaseClient.auth.getSession().then(({ data }) => {
-                const user = data.session?.user;
-                console.log('Auth state checked:', user ? 'Authenticated' : 'Not authenticated');
-                isLoggedIn = !!user; // Update the isLoggedIn variable based on user state
-            });
-            // Authentication check is handled by the checkAuthState function above
-            // Variables for UI state based on authentication
-            let isLoggedIn = false; // This will be updated by the checkAuthState callback
-            
-            // Search functionality
-            const searchInput = document.getElementById('profile-search');
-            const searchBtn = document.getElementById('search-btn');
-            const profilesGrid = document.getElementById('profiles-grid');
-            const profileCards = profilesGrid.querySelectorAll('div.bg-white');
-            
-            if (searchBtn && searchInput) {
-                searchBtn.addEventListener('click', function() {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    
-                    // Simple search implementation (front-end only)
-                    profileCards.forEach(card => {
-                        const name = card.querySelector('h3').textContent.toLowerCase();
-                        const city = card.querySelector('span.text-gray-500').textContent.toLowerCase();
-                        const description = card.querySelector('p.text-gray-600').textContent.toLowerCase();
-                        const tags = Array.from(card.querySelectorAll('span.rounded-full')).map(tag => tag.textContent.toLowerCase());
-                        
-                        // Check if any field contains the search term
-                        const matchesSearch = 
-                            name.includes(searchTerm) || 
-                            city.includes(searchTerm) || 
-                            description.includes(searchTerm) || 
-                            tags.some(tag => tag.includes(searchTerm));
-                        
-                        // Show/hide based on search match
-                        if (matchesSearch || searchTerm === '') {
-                            card.classList.remove('hidden');
-                        } else {
-                            card.classList.add('hidden');
-                        }
-                    });
-                });
-                
-                // Allow search on Enter key
-                searchInput.addEventListener('keyup', function(e) {
-                    if (e.key === 'Enter') {
-                        searchBtn.click();
-                    }
-                });
-            }
-            
-            // Clear filters button
-            const clearFiltersBtn = document.getElementById('clear-filters');
-            const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-            const cityFilter = document.getElementById('city-filter');
-            
-            if (clearFiltersBtn) {
-                clearFiltersBtn.addEventListener('click', function() {
-                    // Reset all checkboxes
-                    filterCheckboxes.forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-                    
-                    // Reset city select
-                    if (cityFilter) {
-                        cityFilter.value = '';
-                    }
-                    
-                    // Reset search
-                    if (searchInput) {
-                        searchInput.value = '';
-                    }
-                    
-                    // Show all profiles
-                    profileCards.forEach(card => {
-                        card.classList.remove('hidden');
-                    });
-                });
-            }
-            
-            // Connect buttons
-            const connectButtons = document.querySelectorAll('button.bg-gradient-to-r');
-            
-            connectButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Mock connection functionality
-                    const profileName = this.closest('.p-6').querySelector('h3').textContent;
-                    alert(`Connection request sent to ${profileName}! They will be notified of your interest.`);
-                    
-                    // Change button text
-                    this.textContent = 'Request Sent';
-                    this.disabled = true;
-                    this.classList.add('opacity-75');
-                });
-            });
-        });
-    </script>
     <!-- Supabase and Authentication Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="js/supabaseClient.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/authNavigation.js"></script>
+    
+    <!-- Database utilities - Must come before any scripts that use the Supabase client -->
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/database-utils.js"></script>
+    
+    <!-- Authentication Guard - Protects this page from unauthorized access -->
+    <script src="js/auth-guard.js"></script>
+    
+    <!-- Subscription Validation Scripts -->
+    <script src="js/subscription-validator.js"></script>
+    <script src="js/connection-subscription.js"></script>
+    
+    <!-- AOS Animation Library -->    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- SweetAlert2 for better alert dialogs -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Database utilities already included above -->
+    <!-- No need to include them again -->
+    
+    <!-- Test utilities -->
+    <script src="js/test-utils.js"></script>
+    
+    <!-- Search and Filter Script -->
+    <script src="js/find-yourself-one.js"></script>
+    
     <!-- Fix for header visibility -->
     <script src="js/fix-header.js"></script>
+    
+
+    <!-- Direct fix for search and filter functionality -->
+    <script>
+    // This script directly adds search and filter functionality without relying on the existing JS
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded - setting up search and filters');
+        
+        // IMPORTANT: Wait for a moment to ensure all profiles are loaded
+        setTimeout(function() {
+            // Directly get the elements by ID
+            const searchInput = document.getElementById('profile-search');
+            const searchButton = document.getElementById('search-btn');
+            const cityFilter = document.getElementById('city-filter');
+            const profilesGrid = document.getElementById('profiles-grid');
+            const ageCheckboxes = document.querySelectorAll('input[name="age-range"]');
+            const interestCheckboxes = document.querySelectorAll('input[name="interest"]');
+            
+            console.log('Search elements found:', {
+                searchInput: !!searchInput,
+                searchButton: !!searchButton,
+                cityFilter: !!cityFilter,
+                profilesGrid: !!profilesGrid,
+                ageCheckboxes: ageCheckboxes.length,
+                interestCheckboxes: interestCheckboxes.length
+            });
+            
+            if (!profilesGrid) {
+                console.error('Critical error: Profiles grid not found!');
+                return;
+            }
+            
+            // Store all profiles for filtering
+            const allProfileCards = Array.from(profilesGrid.querySelectorAll('.profile-card'));
+            console.log(`Found ${allProfileCards.length} profile cards to filter`);
+            
+            // Main filter function
+            function filterProfiles() {
+                // Get current filter values
+                const searchValue = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const cityValue = cityFilter ? cityFilter.value.toLowerCase() : '';
+                
+                // Get selected age ranges
+                const selectedAges = [];
+                ageCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedAges.push(checkbox.value);
+                    }
+                });
+                
+                // Get selected interests
+                const selectedInterests = [];
+                interestCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedInterests.push(checkbox.value.toLowerCase());
+                    }
+                });
+                
+                console.log('Filtering with:', {
+                    search: searchValue,
+                    city: cityValue,
+                    ages: selectedAges,
+                    interests: selectedInterests
+                });
+                
+                // Track if we found any matches
+                let foundMatch = false;
+                
+                // Apply filters to each card
+                allProfileCards.forEach(card => {
+                    const cardText = card.textContent.toLowerCase();
+                    
+                    // Check if card matches all filters
+                    const matchesSearch = !searchValue || cardText.includes(searchValue);
+                    const matchesCity = !cityValue || cardText.includes(cityValue);
+                    
+                    // Age and interest matching is more complex
+                    let matchesAge = selectedAges.length === 0; // If no ages selected, all match
+                    let matchesInterests = selectedInterests.length === 0; // If no interests selected, all match
+                    
+                    // Check age ranges if any are selected
+                    if (selectedAges.length > 0) {
+                        selectedAges.forEach(ageRange => {
+                            if (cardText.includes(ageRange.toLowerCase())) {
+                                matchesAge = true;
+                            }
+                        });
+                    }
+                    
+                    // Check interests if any are selected
+                    if (selectedInterests.length > 0) {
+                        selectedInterests.forEach(interest => {
+                            if (cardText.includes(interest)) {
+                                matchesInterests = true;
+                            }
+                        });
+                    }
+                    
+                    // Card must match ALL applied filters
+                    if (matchesSearch && matchesCity && matchesAge && matchesInterests) {
+                        card.style.display = '';
+                        foundMatch = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Handle no results
+                const noResultsMsg = profilesGrid.querySelector('.no-results-message');
+                
+                if (!foundMatch) {
+                    // Show no results message if it doesn't exist
+                    if (!noResultsMsg) {
+                        const noResults = document.createElement('div');
+                        noResults.className = 'col-span-full text-center py-12 text-gray-500 no-results-message';
+                        noResults.innerHTML = `
+                            <i class="fas fa-search text-purple-500 text-3xl mb-3"></i>
+                            <p>No profiles match your search criteria. Try adjusting your filters.</p>
+                        `;
+                        profilesGrid.appendChild(noResults);
+                    }
+                } else if (noResultsMsg) {
+                    // Remove no results message if we found matches
+                    noResultsMsg.remove();
+                }
+            }
+            
+            // Attach event listeners
+            if (searchInput) {
+                searchInput.addEventListener('input', filterProfiles);
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') filterProfiles();
+                });
+                console.log('Search input listeners attached');
+            }
+            
+            if (searchButton) {
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    filterProfiles();
+                });
+                console.log('Search button listener attached');
+            }
+            
+            if (cityFilter) {
+                cityFilter.addEventListener('change', filterProfiles);
+                console.log('City filter listener attached');
+            }
+            
+            // Add listeners to checkboxes
+            ageCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', filterProfiles);
+            });
+            
+            interestCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', filterProfiles);
+            });
+            
+            console.log('All filter listeners attached successfully');
+            
+            // Run initial filter to set up everything
+            filterProfiles();
+        }, 2000); // Wait 2 seconds to ensure profiles are loaded
+    });
+    </script>
+    
+    <!-- Navigation Scripts -->
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/authNavigation.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/fix-header.js"></script>
+    <script src="js/dropdown-nav.js"></script>
+    
+    <!-- Notification System -->
+    <script src="js/notifications.js"></script>
+    <script src="js/notification-handler.js"></script>
+    <script src="js/notification-drag-new.js"></script>
+    
+    <!-- Profile Dropdown Handler -->
+    <script src="js/profile-dropdown.js"></script>
 </body>
 </html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Navigation - ConnectSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
+    <!-- Top Mini Navigation Bar -->
+    <header class="fixed w-full bg-white shadow-sm z-40 transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-purple-600 font-bold text-xl">
+                        ConnectSphere
+                    </a>
+                </div>
+                
+                <!-- Right Side Icons -->
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <button class="icon-button">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <!-- Messages -->
+                    <button class="icon-button">
+                        <i class="fas fa-envelope"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    
+                    <!-- Sidebar Toggle Button -->
+                    <button id="sidebar-toggle" class="icon-button">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-lg font-semibold text-gray-700">Menu</h3>
+            <button id="sidebar-close" class="sidebar-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- User Info (if logged in) -->
+        <div class="sidebar-user">
+            <div class="avatar">
+                <img src="https://via.placeholder.com/50" alt="User Avatar">
+            </div>
+            <div class="user-info">
+                <h4 class="user-name">John Doe</h4>
+                <p class="user-status">Premium Member</p>
+            </div>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-search"></i>
+                <span>Find Match</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-comment"></i>
+                <span>Chat</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-crown"></i>
+                <span>Subscription</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-question-circle"></i>
+                <span>Help & Support</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+        
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <p>© 2025 ConnectSphere</p>
+        </div>
+    </aside>
+    
+    <!-- Overlay for Sidebar -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    
+    <!-- Page Content for Demo -->
+    <main class="pt-24 pb-12 main-content">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-center mb-8">Sidebar Navigation Design</h1>
+            <p class="text-center mb-8">A clean top bar with a slide-out sidebar for navigation.</p>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Key Features:</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>Minimal top bar with only essential elements</li>
+                    <li>Slide-out sidebar with comprehensive navigation</li>
+                    <li>User profile information in the sidebar</li>
+                    <li>Icon-based navigation for better visual recognition</li>
+                    <li>Responsive design that works on all devices</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript for Sidebar Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebarClose = document.getElementById('sidebar-close');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            function openSidebar() {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            sidebarToggle.addEventListener('click', openSidebar);
+            sidebarClose.addEventListener('click', closeSidebar);
+            sidebarOverlay.addEventListener('click', closeSidebar);
+        });
+    </script>
+</body>
+</html>

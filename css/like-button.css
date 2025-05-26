@@ -1,0 +1,60 @@
+/* Like Button Animation Styles */
+.like-button {
+    position: relative;
+    transition: transform 0.2s ease;
+    outline: none;
+}
+
+.like-button:hover {
+    transform: scale(1.1);
+}
+
+.like-button i {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.like-button.like-animation i {
+    animation: likeAnimation 0.7s ease;
+}
+
+@keyframes likeAnimation {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.5);
+    }
+    50% {
+        transform: scale(0.8);
+    }
+    75% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.like-count {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.like-button.like-animation .like-count {
+    animation: countAnimation 0.5s ease;
+}
+
+@keyframes countAnimation {
+    0% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

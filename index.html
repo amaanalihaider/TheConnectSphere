@@ -7,66 +7,187 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/contact-form.css">
     <link rel="stylesheet" href="css/header-fix.css">
+    <link rel="stylesheet" href="css/dropdown-nav.css">
+    <link rel="stylesheet" href="css/profile-button-fix.css">
     <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <!-- Notification System CSS -->
+    <link rel="stylesheet" href="css/notifications.css">
 </head>
-<body class="font-sans antialiased text-gray-800">
+<body class="font-sans antialiased text-gray-800 bg-gray-50">
     <!-- Header -->
-    <header id="header" class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-purple-600">
-                <span class="text-pink-500">The</span> ConnectSphere
-            </a>
-            <!-- Desktop Navigation -->
-            <nav class="flex space-x-6">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#features" class="nav-link">Features</a>
-                <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
-                <a href="chat-advisor.html" class="nav-link">Relationship Advisor</a>
-                <a href="subscription.html" class="nav-link">Subscription</a>
-                <a href="#blog" class="nav-link">Blog</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="find-yourself-one.html" id="find-one-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 auth-link hidden">Find Yourself One</a>
-                <a href="my-profile.html" id="profile-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 ml-2 auth-link hidden">
-                    <i class="fas fa-user mr-1"></i> My Profile
-                </a>
-                <a href="#" id="logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 hover:shadow-lg transition duration-300 auth-link hidden">
-                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                </a>
-                <a href="login.html" id="login-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition duration-300 non-auth-link">Sign In</a>
-            </nav>
-            <!-- Mobile Navigation Toggle -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-500 hover:text-purple-500 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
-            <div class="container mx-auto px-4 py-3">
-                <div class="flex flex-col space-y-3">
-                    <a href="index.html" class="nav-link active">Home</a>
+    <header id="header" class="fixed w-full sticky top-0 z-50 transition-all duration-300 bg-white">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
+                        <span>The</span> <span>ConnectSphere</span>
+                    </a>
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <div class="md:flex items-center space-x-1 px-4">
+                    <a href="#home" class="nav-link ">Home</a>
                     <a href="#about" class="nav-link">About</a>
                     <a href="#features" class="nav-link">Features</a>
-                    <a href="find-yourself-one.html" class="nav-link">Find Yourself One</a>
-                    <a href="chat-advisor.html" class="nav-link">Relationship Advisor</a>
+                    
+                    <!-- Dropdown: Find Match -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Find Match
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="find-yourself-one.html" class="dropdown-item">
+                                <i class="fas fa-search mr-2 text-purple-500"></i>Find Yourself One
+                            </a>
+                            <a href="find-yourself-one.html#search" class="dropdown-item">
+                                <i class="fas fa-user-friends mr-2 text-purple-500"></i>Search Profiles
+                            </a>
+                            <a href="find-yourself-one.html#connections" class="dropdown-item">
+                                <i class="fas fa-handshake mr-2 text-purple-500"></i>My Connections
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown: Relationship Tools -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Relationship 
+                            <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="chat-advisor.html" class="dropdown-item">
+                                <i class="fas fa-comment-alt mr-2 text-purple-500"></i>Relationship Advisor
+                            </a>
+                            <a href="relationship-dashboard.html" class="dropdown-item">
+                                <i class="fas fa-heartbeat mr-2 text-purple-500"></i>Health Dashboard
+                            </a>
+                        </div>
+                    </div>
+                    
                     <a href="subscription.html" class="nav-link">Subscription</a>
                     <a href="#blog" class="nav-link">Blog</a>
                     <a href="#contact" class="nav-link">Contact</a>
-                    <a href="find-yourself-one.html" id="mobile-find-one-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300 auth-link hidden">Find Yourself One</a>
-                    <a href="my-profile.html" id="mobile-profile-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300 mt-2 auth-link hidden">
-                        <i class="fas fa-user mr-1"></i> My Profile
-                    </a>
-                    <a href="#" id="mobile-logout-btn" class="bg-gray-500 text-white px-4 py-2 rounded-full text-center hover:bg-gray-600 hover:shadow-lg transition duration-300 mt-2 auth-link hidden">
-                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                    </a>
-                    <a href="login.html" id="mobile-login-btn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center hover:shadow-lg transition duration-300 non-auth-link">Sign In</a>
+                </div>
+                
+                <!-- Auth Buttons -->
+                <div class="flex items-center space-x-3 ml-4">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="non-auth-links">
+                        <a href="login.html" id="login-btn" class="login-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; color: #7c3aed; font-weight: 500; border: 1px solid #7c3aed; border-radius: 9999px; margin-right: 0.5rem; background-color: white;" onclick="window.location.href='login.html'; return false;"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" id="signup-btn" class="signup-btn inline-flex items-center non-auth-link" style="display: inline-flex !important; padding: 0.5rem 1.25rem; background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: white; font-weight: 500; border-radius: 9999px; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Hidden Auth Links -->
+                    <div class="auth-links hidden">
+                        <!-- <a href="find-yourself-one.html" id="find-one-btn" class="find-one-btn auth-link"><i class="fas fa-search mr-2"></i>Find One</a> -->
+                        
+                        <!-- Notification Bell -->
+                        <div class="notification-bell auth-link mr-4" id="notification-bell">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        
+                        <!-- Dropdown: Profile -->
+                        <div class="relative profile-dropdown-container auth-link" id="profile-dropdown-container">
+                            <button id="profile-btn" class="profile-btn"><i class="fas fa-user-circle mr-2"></i>My Profile</button>
+                            <div id="profile-dropdown" class="profile-dropdown">
+                                <div class="p-3 border-b border-gray-100">
+                                    <p class="font-medium text-gray-800">John Doe</p>
+                                    <p class="text-xs text-gray-500">john.doe@example.com</p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="my-profile.html" class="dropdown-item">
+                                        <i class="fas fa-user mr-2 text-purple-500"></i>View Profile
+                                    </a>
+                                    <a href="relationship-dashboard.html" class="dropdown-item">
+                                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Health Dashboard
+                                    </a>
+                                    <a href="subscription.html" class="dropdown-item">
+                                        <i class="fas fa-crown mr-2 text-purple-500"></i>Subscription
+                                    </a>
+                                </div>
+                                <div class="p-3 border-t border-gray-100">
+                                    <a href="#" id="logout-btn" class="logout-btn w-full flex justify-center">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="block md:hidden">
+                    <button id="mobile-menu-button" class="mobile-menu-button p-2 rounded-md hover:bg-gray-100">
+                        <i class="fas fa-bars text-purple-600 text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu hidden md:hidden py-4 bg-white shadow-lg rounded-lg mt-2">
+                <a href="#home" class="mobile-nav-link active">Home</a>
+                <a href="#about" class="mobile-nav-link">About</a>
+                <a href="#features" class="mobile-nav-link">Features</a>
+                
+                <!-- Mobile Dropdown: Find Match -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button">
+                        Find Match
+                        <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="find-yourself-one.html" class="mobile-dropdown-item">Find Yourself One</a>
+                        <a href="find-yourself-one.html#search" class="mobile-dropdown-item">Search Profiles</a>
+                        <a href="find-yourself-one.html#connections" class="mobile-dropdown-item">My Connections</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Dropdown: Relationship Tools -->
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-button">
+                        Relationship Tools
+                        <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <div class="mobile-dropdown-menu hidden">
+                        <a href="chat-advisor.html" class="mobile-dropdown-item">Relationship Advisor</a>
+                        <a href="relationship-dashboard.html" class="mobile-dropdown-item">Health Dashboard</a>
+                    </div>
+                </div>
+                
+                <a href="subscription.html" class="mobile-nav-link">Subscription</a>
+                <a href="#blog" class="mobile-nav-link">Blog</a>
+                <a href="#contact" class="mobile-nav-link">Contact</a>
+                
+                <!-- Mobile Auth Links -->
+                <div class="pt-6 border-t border-gray-200 mt-4">
+                    <!-- Non-Auth Links (shown when logged out) -->
+                    <div class="mobile-non-auth-links space-y-3">
+                        <a href="login.html" id="mobile-login-btn" class="mobile-auth-link non-auth-link"><i class="fas fa-sign-in-alt mr-2"></i>Sign In</a>
+                        <a href="signup.html" class="mobile-signup-link non-auth-link"><i class="fas fa-user-plus mr-2"></i>Join Now</a>
+                    </div>
+                    
+                    <!-- Auth Links (shown when logged in) -->
+                    <div class="mobile-auth-links hidden space-y-3">
+                        <a href="find-yourself-one.html" id="mobile-find-one-btn" class="mobile-find-one-link auth-link"><i class="fas fa-search mr-2"></i>Find One</a>
+                        
+                        <!-- Mobile Profile Links -->
+                        <div class="mobile-profile-section">
+                            <a href="my-profile.html" id="mobile-profile-btn" class="mobile-profile-btn auth-link"><i class="fas fa-user-circle mr-2"></i>My Profile</a>
+                            <a href="edit-profile.html" class="mobile-auth-link auth-link"><i class="fas fa-cog mr-2"></i>Settings</a>
+                            <a href="relationship-dashboard.html" class="mobile-auth-link auth-link"><i class="fas fa-heartbeat mr-2"></i>Health Dashboard</a>
+                            <a href="subscription.html" class="mobile-auth-link auth-link"><i class="fas fa-crown mr-2"></i>Subscription</a>
+                            
+                            <a href="#" id="mobile-logout-btn" class="mobile-logout-link mt-2 pt-2 border-t border-gray-200 auth-link">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,7 +204,7 @@
                     <p class="text-lg md:text-xl text-gray-600 mb-8">
                         Where meaningful connections happen. Join thousands who have found their life partners through our platform.
                     </p>
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 inline-block">
                         <a href="signup.html" class="btn-primary non-auth-link" id="join-now-btn">
                             Join Now
                         </a>
@@ -93,11 +214,12 @@
                         <a href="#about" class="btn-secondary">
                             Learn More
                         </a>
-                    </div>
-                    <div class="mt-4">
                         <a href="subscription.html" class="btn-primary">
                             Subscribe
                         </a>
+                    </div>
+                    <div class="mt-4">
+                       
                     </div>
                 </div>
                 <div class="md:w-1/2" data-aos="fade-left" data-aos-duration="1000">
@@ -777,12 +899,13 @@
                     <p class="text-gray-400 mb-4">
                         Get the latest updates, tips, and success stories delivered to your inbox.
                     </p>
-                    <form class="flex">
-                        <input type="email" placeholder="Your email address" class="px-4 py-2 w-full rounded-l-lg focus:outline-none text-gray-900">
+                    <form class="flex footer-newsletter-form">
+                        <input type="email" placeholder="Your email address" class="px-4 py-2 w-full rounded-l-lg focus:outline-none text-gray-900" required>
                         <button type="submit" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg transition duration-300">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </form>
+                    <div id="newsletter-status" class="mt-2 text-sm"></div>
                 </div>
             </div>
             
@@ -800,18 +923,32 @@
     </footer>
 
     <!-- Authentication scripts -->
+    <script src="js/auth.js"></script>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script src="js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabaseClient.js"></script>
+    <script src="js/database-utils.js"></script>
+    <script src="js/newsletter.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dropdown-nav.js"></script>
+    <script src="js/fix-header.js"></script>
+    <!-- Re-enabled auth scripts for proper authentication state handling -->
     <script src="js/auth.js"></script>
     <script src="js/authNavigation.js"></script>
-    <script src="js/logout.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/test-utils.js"></script>
     <script src="js/chatbot.js"></script>
     <script src="js/contact-form.js"></script>
-    <!-- Fix for header visibility -->
-    <script src="js/fix-header.js"></script>
+    <script src="js/nav-fix.js"></script>
+    <script src="js/index-auth.js"></script>
+    <!-- Notification System -->
+    <script src="js/notifications.js"></script>
+    <script src="js/notification-handler.js"></script>
+    <script src="js/notification-drag-new.js"></script>
+    <!-- Profile Dropdown Handler -->
+    <script src="js/profile-dropdown.js"></script>
 </body>
 </html>
