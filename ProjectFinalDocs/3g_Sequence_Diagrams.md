@@ -92,39 +92,53 @@ const signInWithEmail = async (email, password) => {
 };
 ```
 
-## Sequence Diagram 2: Sending and Receiving Messages
+## Sequence Diagram 2: Real-time Messaging Flow
 
 ```
-┌────────┐      ┌───────────┐     ┌─────────────┐     ┌───────────┐     ┌────────────┐
-│ User A │      │ Chat UI A │     │ Messaging   │     │ Supabase  │     │ Chat UI B  │
-└───┬────┘      └─────┬─────┘     └─────┬───────┘     └─────┬─────┘     └─────┬──────┘
-    │                 │                 │                   │                 │
-    │ Type Message    │                 │                   │                 │
-    │─────────────────>                 │                   │                 │
-    │                 │                 │                   │                 │
-    │                 │ Send Message    │                   │                 │
-    │                 │─────────────────>                   │                 │
-    │                 │                 │                   │                 │
-    │                 │                 │ Insert Message    │                 │
-    │                 │                 │──────────────────>                  │
-    │                 │                 │                   │                 │
-    │                 │                 │ Confirm Insert    │                 │
-    │                 │                 │<──────────────────                  │
-    │                 │                 │                   │                 │
-    │                 │ Update Local UI │                   │                 │
-    │                 │<────────────────                    │                 │
-    │                 │                 │                   │                 │
-    │ Show Sent Message                 │                   │                 │
-    │<────────────────                  │                   │                 │
-    │                 │                 │                   │                 │
-    │                 │                 │                   │ Realtime Event  │
-    │                 │                 │                   │────────────────>
-    │                 │                 │                   │                 │
-    │                 │                 │                   │ Process Message │
-    │                 │                 │                   │                 │───┐
-    │                 │                 │                   │                 │   │
-    │                 │                 │                   │                 │<──┘
-    │                 │                 │                   │                 │
+┌────────┐      ┌───────────┐     ┌───────────────┐     ┌───────────────┐     ┌───────────┐
+│ User A │      │ Chat UI A │     │ Messaging     │     │ Supabase      │     │ Chat UI B │
+└───┬────┘      └─────┬─────┘     │ Component     │     │ Real-time     │     └─────┬──────┘
+    │                 │           └─────┬─────────┘     └─────┬─────────┘           │
+    │                 │                 │                     │                     │
+    │                 │<----- setupRealtimeSubscription() ---->                     │
+    │                 │                 │                     │                     │
+    │                 │                 │       Subscribe to WebSocket Channel      │
+    │                 │                 │                     │<------------------->│
+    │                 │                 │                     │                     │
+    │ Type Message    │                 │                     │                     │
+    │─────────────────>                 │                     │                     │
+    │                 │                 │                     │                     │
+    │                 │ sendMessage()   │                     │                     │
+    │                 │────────────────>│                     │                     │
+    │                 │                 │                     │                     │
+    │                 │                 │ Insert into         │                     │
+    │                 │                 │ messages table      │                     │
+    │                 │                 │───────────────────>│                     │
+    │                 │                 │                     │                     │
+    │                 │                 │ Confirm Insertion   │                     │
+    │                 │                 │<───────────────────│                     │
+    │                 │                 │                     │                     │
+    │                 │ Update Local UI │                     │                     │
+    │                 │<────────────────│                     │                     │
+    │                 │                 │                     │                     │
+    │ See Message Sent│                 │                     │                     │
+    │<────────────────│                 │                     │                     │
+    │                 │                 │                     │                     │
+    │                 │                 │                     │ Broadcast INSERT    │
+    │                 │                 │                     │ event via WebSocket │
+    │                 │                 │                     │───────────────────>│
+    │                 │                 │                     │                     │
+    │                 │                 │                     │ handleNewMessage()  │
+    │                 │                 │                     │                   ┌─┘
+    │                 │                 │                     │                   │
+    │                 │                 │                     │                   │
+    │                 │                 │                     │                   V
+    │                 │                 │                     │       displayMessage()
+    │                 │                 │                     │                   ┌─┘
+    │                 │                 │                     │                   │
+    │                 │                 │                     │                   V
+    │                 │                 │                     │       User B sees
+    │                 │                 │                     │       new message
     │                 │                 │                   │ Show New Message│
     │                 │                 │                   │                 │───┐
     │                 │                 │                   │                 │   │
@@ -272,53 +286,78 @@ const createSubscription = async (userId, planType) => {
 };
 ```
 
-## Sequence Diagram 4: AI Chat Advisor Interaction
+## Sequence Diagram 4: AI Chat Advisor Interaction with Voice Input
 
 ```
-┌────────┐      ┌────────────┐     ┌───────────────┐     ┌───────────┐
-│  User  │      │ Chat       │     │ Chatbot       │     │ Gemini    │
-│        │      │ UI         │     │ Component     │     │ API       │
-└───┬────┘      └─────┬──────┘     └───────┬───────┘     └─────┬─────┘
-    │                 │                    │                   │     
-    │ Type Question   │                    │                   │     
-    │─────────────────>                    │                   │     
-    │                 │                    │                   │     
-    │                 │ Process Query      │                   │     
-    │                 │──────────────────>│                   │     
-    │                 │                    │                   │     
-    │                 │                    │ Send Request      │     
-    │                 │                    │──────────────────>     
-    │                 │                    │                   │     
-    │                 │                    │                   │     
-    │                 │                    │                   │─────┐
-    │                 │                    │                   │ Process
-    │                 │                    │                   │ Query
-    │                 │                    │                   │<────┘
-    │                 │                    │                   │     
-    │                 │                    │ Return Response   │     
-    │                 │                    │<──────────────────     
-    │                 │                    │                   │     
-    │                 │                    │ Format Response   │     
-    │                 │                    │─────┐             │     
-    │                 │                    │     │             │     
-    │                 │                    │<────┘             │     
-    │                 │                    │                   │     
-    │                 │ Display Response   │                   │     
-    │                 │<──────────────────│                   │     
-    │                 │                    │                   │     
-    │ View AI Advice  │                    │                   │     
-    │<────────────────                     │                   │     
-    │                 │                    │                   │     
-    │ Ask Follow-up   │                    │                   │     
-    │─────────────────>                    │                   │     
-    │                 │                    │                   │     
-    │                 │ Process with Context                   │     
-    │                 │──────────────────>│                   │     
-    │                 │                    │                   │     
-    │                 │                    │ Send Request with │     
-    │                 │                    │ Chat History      │     
-    │                 │                    │──────────────────>     
-    │                 │                    │                   │     
+┌────────┐      ┌────────────┐     ┌───────────────┐     ┌───────────────┐     ┌───────────┐
+│  User  │      │ Chat       │     │ Voice         │     │ Chatbot       │     │ Gemini    │
+│        │      │ UI         │     │ Component     │     │ Component     │     │ API       │
+└───┬────┘      └─────┬──────┘     └───────┬───────┘     └───────┬───────┘     └─────┬─────┘
+    │                 │                    │                     │                   │     
+    │ Click Mic Button│                    │                     │                   │     
+    │─────────────────>                    │                     │                   │     
+    │                 │                    │                     │                   │     
+    │                 │ toggleRecording()  │                     │                   │     
+    │                 │──────────────────>│                     │                   │     
+    │                 │                    │                     │                   │     
+    │                 │                    │ startRecording()    │                   │     
+    │                 │                    │───────┐             │                   │     
+    │                 │                    │       │             │                   │     
+    │                 │                    │<──────┘             │                   │     
+    │                 │                    │                     │                   │     
+    │                 │ updateMicUI(true)  │                     │                   │     
+    │                 │<─────────────────┬┘                     │                   │     
+    │                 │                  │                      │                   │     
+    │ Speak Message   │                  │                      │                   │     
+    │─────────────────>                 │                      │                   │     
+    │                 │                  │                      │                   │     
+    │                 │                  │ handleRecognition()  │                   │     
+    │                 │                  │───────┐              │                   │     
+    │                 │                  │       │              │                   │     
+    │                 │                  │<──────┘              │                   │     
+    │                 │                  │                      │                   │     
+    │                 │ Show Interim Text│                      │                   │     
+    │                 │<─────────────────┘                      │                   │     
+    │                 │                                         │                   │     
+    │ Click Mic Again │                                         │                   │     
+    │─────────────────>                                         │                   │     
+    │                 │                                         │                   │     
+    │                 │ toggleRecording()                       │                   │     
+    │                 │───────────────────────────────────────>│                   │     
+    │                 │                                         │                   │     
+    │                 │                                         │ stopRecording()   │     
+    │                 │                                         │───────┐           │     
+    │                 │                                         │       │           │     
+    │                 │                                         │<──────┘           │     
+    │                 │                                         │                   │     
+    │                 │ updateMicUI(false)                      │                   │     
+    │                 │<──────────────────────────────────────┬┘                   │     
+    │                 │                                       │                    │     
+    │                 │                                       │ Send Transcript    │     
+    │                 │                                       │──────────────────>│     
+    │                 │                                       │                    │     
+    │                 │                                       │ Process Query      │     
+    │                 │                                       │                    │─────┐
+    │                 │                                       │                    │     │
+    │                 │                                       │                    │<────┘
+    │                 │                                       │                    │     
+    │                 │                                       │ Send Request       │     
+    │                 │                                       │───────────────────>     
+    │                 │                                       │                    │     
+    │                 │                                       │ Return Response    │     
+    │                 │                                       │<───────────────────     
+    │                 │                                       │                    │     
+    │                 │                                       │ Format Response    │     
+    │                 │                                       │───────┐            │     
+    │                 │                                       │       │            │     
+    │                 │                                       │<──────┘            │     
+    │                 │                                       │                    │     
+    │                 │ Display Response                      │                    │     
+    │                 │<──────────────────────────────────────┘                    │     
+    │                 │                                                            │     
+    │ View AI Response│                                                            │     
+    │<────────────────┘                                                            │     
+    │                 │                                                            │     
 ```
 
 ### Explanation:

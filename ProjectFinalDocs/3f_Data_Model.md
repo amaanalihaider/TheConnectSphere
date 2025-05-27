@@ -1,7 +1,7 @@
 # Data Model
 
 ## Overview
-The Data Model for ConnectSphere represents the database schema and the relationships between different entities in the system. ConnectSphere uses Supabase's PostgreSQL database for data storage, providing a robust foundation for the application's data needs.
+The Data Model for ConnectSphere represents the database schema and the relationships between different entities in the system. ConnectSphere uses Supabase's PostgreSQL database for data storage, providing a robust foundation for the application's data needs. The model has been updated to include the real-time messaging system, Google OAuth authentication, and other recent implementations.
 
 ## Entity-Relationship Diagram
 
@@ -128,19 +128,28 @@ CREATE TABLE profiles (
 ```
 
 ### 3. conversations
-- **Description**: Represents chat conversations between users
+- **Description**: Represents real-time chat conversations between two users
 - **Columns**:
   - `id` (PK): UUID - Unique identifier
+  - `user1_id` (FK): UUID - First participant (references profiles.id)
+  - `user2_id` (FK): UUID - Second participant (references profiles.id)
   - `created_at`: TIMESTAMP - When the conversation was created
   - `updated_at`: TIMESTAMP - When the conversation was last updated
+  - `last_message_at`: TIMESTAMP - When the last message was sent
 - **Constraints**:
   - Primary Key on `id`
+  - Foreign Keys on `user1_id` and `user2_id` reference profiles.id
+  - Unique constraint on (`user1_id`, `user2_id`) to prevent duplicate conversations
 - **SQL Implementation**:
 ```sql
 CREATE TABLE conversations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user1_id UUID NOT NULL REFERENCES profiles(id),
+  user2_id UUID NOT NULL REFERENCES profiles(id),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  last_message_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user1_id, user2_id)
 );
 ```
 
@@ -165,7 +174,7 @@ CREATE TABLE conversation_participants (
 ```
 
 ### 5. messages
-- **Description**: Stores messages within conversations
+- **Description**: Stores messages within real-time conversations with WebSocket delivery
 - **Columns**:
   - `id` (PK): UUID - Unique identifier
   - `conversation_id` (FK): UUID - References conversations.id
@@ -177,16 +186,23 @@ CREATE TABLE conversation_participants (
   - Primary Key on `id`
   - Foreign Key on `conversation_id` references conversations.id
   - Foreign Key on `sender_id` references profiles.id
+- **Real-time Functionality**:
+  - Messages trigger WebSocket events when inserted
+  - Clients subscribe to these events for instant updates
+  - Changes to the `is_read` status trigger update events
 - **SQL Implementation**:
 ```sql
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  conversation_id UUID REFERENCES conversations(id),
-  sender_id UUID REFERENCES profiles(id),
+  conversation_id UUID REFERENCES conversations(id) NOT NULL,
+  sender_id UUID REFERENCES profiles(id) NOT NULL,
   content TEXT NOT NULL,
   is_read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Enable real-time subscriptions for this table
+ALTER PUBLICATION supabase_realtime ADD TABLE messages;
 ```
 
 ### 6. connections

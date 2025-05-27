@@ -1,7 +1,7 @@
 # Class Diagram
 
 ## Overview
-The Class Diagram for ConnectSphere illustrates the static structure of the system, showing the classes, their attributes, operations, and the relationships among objects. Although ConnectSphere is primarily implemented in JavaScript, which is not strictly class-based, this diagram represents the conceptual object structure of the application.
+The Class Diagram for ConnectSphere illustrates the static structure of the system, showing the classes, their attributes, operations, and the relationships among objects. Although ConnectSphere is primarily implemented in JavaScript, which is not strictly class-based, this diagram represents the conceptual object structure of the application. This diagram has been updated to reflect the current implementation of the ConnectSphere project, including the real-time messaging system, Google OAuth integration, and voice input functionality.
 
 ## Class Diagram
 
@@ -78,8 +78,12 @@ The Class Diagram for ConnectSphere illustrates the static structure of the syst
   - `signUp(email, password)`: Registers a new user
   - `signIn(email, password)`: Authenticates a user
   - `signInWithGoogle()`: Authenticates a user via Google OAuth
-  - `resetPassword(email)`: Initiates password reset process
+  - `handleOAuthCallback()`: Processes Google OAuth redirect
   - `signOut()`: Logs out the user
+  - `resetPassword(email)`: Initiates password reset
+  - `updatePassword(password)`: Updates user password
+  - `getCurrentUser()`: Gets the currently authenticated user
+  - `isAuthenticated()`: Checks if user is authenticated
 - **Relationships**:
   - One-to-One with Profile
   - One-to-Many with Subscription
@@ -114,22 +118,28 @@ The Class Diagram for ConnectSphere illustrates the static structure of the syst
 - **Implementation**: Mapped to `profiles` table in Supabase
 
 ### 3. Conversation
-- **Description**: Represents a chat conversation between users
+- **Description**: Represents a real-time messaging conversation between two users
 - **Attributes**:
   - `id`: UUID - Unique identifier
+  - `user1_id`: UUID - First participant ID
+  - `user2_id`: UUID - Second participant ID 
   - `created_at`: DateTime - When the conversation was created
   - `updated_at`: DateTime - When the conversation was last updated
+  - `last_message_at`: DateTime - When the last message was sent
 - **Operations**: (Implemented in `/tests/msg-test/js/messaging.js`)
-  - `createConversation(participants)`: Creates a new conversation
+  - `createConversation(user1Id, user2Id)`: Creates a new conversation
   - `getConversation(id)`: Retrieves a conversation by ID
   - `listConversations(userId)`: Lists all conversations for a user
+  - `getOrCreateConversation(user1Id, user2Id)`: Gets existing or creates new conversation
+  - `subscribeToChatUpdates(conversationId)`: Sets up real-time subscription
 - **Relationships**:
-  - Many-to-Many with Profile (through a join table not shown)
+  - Many-to-One with Profile (user1)
+  - Many-to-One with Profile (user2)
   - One-to-Many with Message
-- **Implementation**: Mapped to `conversations` table in Supabase
+- **Implementation**: Mapped to `conversations` table in Supabase with real-time change listeners
 
 ### 4. Message
-- **Description**: Represents a message within a conversation
+- **Description**: Represents a message within a real-time conversation
 - **Attributes**:
   - `id`: UUID - Unique identifier
   - `conversation_id`: UUID - Reference to conversation
@@ -141,27 +151,34 @@ The Class Diagram for ConnectSphere illustrates the static structure of the syst
   - `sendMessage(conversationId, content)`: Sends a new message
   - `markAsRead(id)`: Marks a message as read
   - `getMessageHistory(conversationId)`: Gets message history
+  - `setupRealtimeSubscription(conversationId)`: Sets up WebSocket listener
+  - `handleNewMessage(payload)`: Processes incoming real-time messages
+  - `displayMessage(message)`: Updates UI with new messages
 - **Relationships**:
   - Many-to-One with Conversation
-  - Many-to-One with Profile (sender)
+  - Many-to-One with User (sender)
   - One-to-One with VoiceMessage (optional)
-- **Implementation**: Mapped to `messages` table in Supabase
+- **Implementation**: Mapped to `messages` table in Supabase with real-time subscriptions
 
 ### 5. VoiceMessage
-- **Description**: Extends Message with voice input capabilities
+- **Description**: Extends the Chat Advisor with voice input capabilities using the Web Speech API
 - **Attributes**:
-  - `id`: UUID - Unique identifier
-  - `message_id`: UUID - Reference to the associated message
-  - `audio_url`: String - URL to the audio file
-  - `duration`: Integer - Duration of the audio in seconds
-  - `transcription`: Text - Text transcription of the voice message
-- **Operations**: (Implemented in `/tests/voice-input-test/`)
-  - `recordVoiceMessage()`: Records audio from microphone
-  - `transcribeVoiceMessage()`: Converts speech to text
-  - `playVoiceMessage(id)`: Plays the voice message audio
+  - `recording`: Boolean - Whether recording is currently active
+  - `recognition`: SpeechRecognition - Web Speech API object
+  - `transcript`: String - Current speech recognition result
+  - `interim_transcript`: String - Partial recognition results
+  - `final_transcript`: String - Finalized recognition results
+- **Operations**: (Implemented in `/tests/voice-input-test/js/speech-recognition.js`)
+  - `startRecording()`: Activates microphone and begins speech recognition
+  - `stopRecording()`: Stops recording and finalizes transcript
+  - `toggleRecording()`: Toggles recording state on/off
+  - `handleRecognitionResult(event)`: Processes speech recognition results
+  - `updateMicrophoneUI(isRecording)`: Updates UI to show recording state
+  - `sendTranscriptToChat(transcript)`: Sends transcribed text to chat interface
 - **Relationships**:
-  - One-to-One with Message
-- **Implementation**: Conceptual extension using Web Speech API
+  - Integrates with ChatAdvisor component
+  - Uses Web Speech API (SpeechRecognition interface)
+- **Implementation**: Test implementation in `/tests/voice-input-test/` with visual recording indicators
 
 ### 6. Subscription
 - **Description**: Represents a user's subscription plan

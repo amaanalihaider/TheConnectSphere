@@ -63,33 +63,60 @@ The Use Case Diagram for ConnectSphere illustrates the key interactions between 
 - Google OAuth Login
 - Reset Password
 - View Plans
+- View Landing Page Content
+- Contact Support
 
 ### Registered User (inherits from Guest User)
 - Create/Edit Profile
 - Search Matches
 - View Profiles
-- Connect with Users
+- Send Connection Requests
+- Accept/Decline Connection Requests
+- Manage Connections
 - Send/Receive Messages
+- View Message History
 - Chat with AI Advisor
 - View Analytics (limited)
 - Subscribe to Premium
+- Manage Subscription
+- View Notifications
+- Mark Notifications as Read
+- Receive Real-time Updates
+- Verify Email Address
+- Update Account Settings
+- Change Password
+- Log Out
 
 ### Premium User (inherits from Registered User)
 - Access to advanced match filtering
-- Voice Messages
-- Read Receipts
+- Send Voice Messages
+- Access Read Receipts
+- View Typing Indicators
 - Personalize AI Advisor
+- Export Chat History
 - Full Analytics Dashboard
 - Track Relationship Progress
+- Priority Support Access
+- Create Group Conversations
+- Access Enhanced Privacy Settings
 
 ### Admin
 - Manage User Accounts
 - Monitor System Usage
 - Configure System Settings
+- View Usage Analytics
+- Manage Subscription Plans
+- Handle Support Requests
+- Moderate User Content
+- Manage Email Templates
+- View System Logs
 
 ### External Systems
 - **Payment Gateway**: Process subscription payments
 - **Google OAuth**: Authenticate users via Google
+- **Email Service**: Send verification and notification emails
+- **Gemini API**: Process AI chatbot queries
+- **Storage Service**: Store user media and files
 - **Email Service**: Send verification and notification emails
 
 ## Implementation in ConnectSphere

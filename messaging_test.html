@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSphere Messaging Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">ConnectSphere Messaging Test</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Authentication Status</h2>
+            <p id="auth-status" class="text-gray-700">Checking authentication...</p>
+            
+            <div class="mt-4">
+                <button id="login-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    Login
+                </button>
+                <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded ml-2">
+                    Logout
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">Simple Messaging Test</h2>
+            
+            <div id="messages-container" class="border rounded-lg p-4 h-64 overflow-y-auto mb-4 bg-gray-50">
+                <div class="text-center text-gray-500">Messages will appear here</div>
+            </div>
+            
+            <div class="flex">
+                <input id="message-input" type="text" class="flex-1 border rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type a message...">
+                <button id="send-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-lg">
+                    Send
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-6 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">Console Output</h2>
+            <pre id="console-output" class="bg-gray-800 text-green-400 p-4 rounded-lg h-40 overflow-y-auto font-mono text-sm"></pre>
+        </div>
+    </div>
+
+    <!-- Custom console logger to display in the UI -->
+    <script>
+        // Override console.log to also display in our UI
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        
+        console.log = function() {
+            const output = document.getElementById('console-output');
+            const args = Array.from(arguments);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+            ).join(' ');
+            
+            output.innerHTML += `<div class="text-green-400">[LOG] ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+            originalConsoleLog.apply(console, arguments);
+        };
+        
+        console.error = function() {
+            const output = document.getElementById('console-output');
+            const args = Array.from(arguments);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+            ).join(' ');
+            
+            output.innerHTML += `<div class="text-red-400">[ERROR] ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+            originalConsoleError.apply(console, arguments);
+        };
+    </script>
+    
+    <!-- Our test messaging script -->
+    <script src="js/messaging_test.js"></script>
+    
+    <!-- Simple messaging implementation for testing -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-btn');
+            const messagesContainer = document.getElementById('messages-container');
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            // Initialize Supabase client
+            const supabaseUrl = 'https://jucwtfexhavfkhhfpcdv.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3d0ZmV4aGF2ZmtoaGZwY2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc4OTM0MzgsImV4cCI6MjA2MzQ2OTQzOH0.r6ExUkPuv03RRcmRGMnNlkqtGUHsQ3wAIbcRIzwqWMo';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            
+            let channel = null;
+            
+            // Setup real-time channel
+            function setupRealtimeChannel() {
+                console.log('Setting up real-time channel');
+                
+                // Unsubscribe from previous channel if exists
+                if (channel) {
+                    channel.unsubscribe();
+                }
+                
+                // Create new channel with broadcast capability
+                channel = supabase
+                    .channel('test-chat', {
+                        config: {
+                            broadcast: {
+                                self: true
+                            }
+                        }
+                    })
+                    .on('broadcast', { event: 'message' }, (payload) => {
+                        console.log('Received message:', payload);
+                        addMessageToUI(payload.payload.message, payload.payload.sender);
+                    })
+                    .subscribe((status) => {
+                        console.log('Subscription status:', status);
+                    });
+            }
+            
+            // Add message to UI
+            function addMessageToUI(message, sender) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'mb-2 p-2 rounded-lg ' + 
+                    (sender === 'me' ? 'bg-blue-100 ml-auto w-3/4 text-right' : 'bg-gray-200 mr-auto w-3/4');
+                messageEl.textContent = message;
+                messagesContainer.appendChild(messageEl);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            // Send message
+            async function sendMessage() {
+                const message = messageInput.value.trim();
+                if (!message) return;
+                
+                try {
+                    console.log('Sending message:', message);
+                    
+                    // Clear input
+                    messageInput.value = '';
+                    
+                    // Send via broadcast channel
+                    await channel.send({
+                        type: 'broadcast',
+                        event: 'message',
+                        payload: { 
+                            message: message,
+                            sender: 'me',
+                            timestamp: new Date().toISOString()
+                        }
+                    });
+                    
+                    console.log('Message sent successfully');
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                }
+            }
+            
+            // Login function
+            async function login() {
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: prompt('Enter your email:'),
+                        password: prompt('Enter your password:')
+                    });
+                    
+                    if (error) throw error;
+                    
+                    console.log('Logged in successfully:', data.user.email);
+                    document.getElementById('auth-status').textContent = 'Authenticated as: ' + data.user.email;
+                    
+                    // Setup real-time channel after login
+                    setupRealtimeChannel();
+                } catch (error) {
+                    console.error('Login error:', error.message);
+                }
+            }
+            
+            // Logout function
+            async function logout() {
+                try {
+                    await supabase.auth.signOut();
+                    console.log('Logged out successfully');
+                    document.getElementById('auth-status').textContent = 'Not authenticated';
+                    
+                    // Unsubscribe from channel
+                    if (channel) {
+                        channel.unsubscribe();
+                        channel = null;
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error.message);
+                }
+            }
+            
+            // Event listeners
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            loginBtn.addEventListener('click', login);
+            logoutBtn.addEventListener('click', logout);
+            
+            // Check if already logged in
+            async function checkAuth() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    console.log('Already logged in as:', session.user.email);
+                    document.getElementById('auth-status').textContent = 'Authenticated as: ' + session.user.email;
+                    setupRealtimeChannel();
+                } else {
+                    console.log('Not logged in');
+                    document.getElementById('auth-status').textContent = 'Not authenticated';
+                }
+            }
+            
+            // Initialize
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
